@@ -23,10 +23,11 @@ window.addEventListener("resize", updateDraggableState);
  * Handles dragover event, allowing drop and triggers auto-scroll when near window edge.
  * @param {DragEvent} ev - The drag event.
  */
-const container = document.getElementById('body');
+
 
 function dragoverHandler(ev) {
     ev.preventDefault();
+    const container = document.getElementById('body');
 
     const bounds = container.getBoundingClientRect();
     const topEdge = bounds.top + 150;
