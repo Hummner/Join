@@ -40,8 +40,8 @@ async function login() {
     );
 
     if (user) {
-        localStorage.setItem("username", user.username); // ✅ Speichert Namen für Initialen
-        localStorage.setItem("loggedIn", "true");         // Optional: gleich hier setzen
+        localStorage.setItem("username", user.username); 
+        localStorage.setItem("loggedIn", "true");      
         window.location.href = `html/summary.html?name=${encodeURIComponent(user.username)}&login=true`;
         resetUserArray();
     } else {
