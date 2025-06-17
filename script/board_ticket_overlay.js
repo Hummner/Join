@@ -86,7 +86,6 @@ function renderSubtaskIntoTaskOverlay(taskIndex) {
     } else {
         subtaskListRef.innerHTML = "<span style='opacity: 0.2; font-size: 16px'>No Subtask added</span>";
     }
-
     checkCheckboxInOverlay(taskIndex, subtaskList);
 }
 
