@@ -50,7 +50,7 @@ function renderButtons(taskIndex) {
  * @param {number} taskIndex - Task index.
  */
 function renderCategoryIntoTaskOverlay(taskIndex) {
-    let categoryRef = document.getElementById("overlay_category");
+    let categoryRef = document.getElementById("overlay_category_ticket");
     let category = tasks[taskIndex].category;
     categoryRef.innerHTML = category;
     categoryRef.style.backgroundColor = category === "Technical Task" ? "#1FD7C1" : "#0038FF";

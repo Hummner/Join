@@ -2,16 +2,19 @@
     <h2 id="addTask_headline_h1">Add Task</h2>
     <div>
         <img id="close_add_task_overlay" class="close-icon d_none" onclick="closeAddTask()"
-            src="../assets/img/icon/close.svg" alt=""></div>
-        <img id="close_edit_task_overlay" class="close-icon d_none" onclick="closeAddTask(); closeOverlayTask()"
-            src="../assets/img/icon/close.svg" alt=""></div>
+            src="../assets/img/icon/close.svg" alt="">
+    </div>
+    <img id="close_edit_task_overlay" class="close-icon d_none" onclick="closeAddTask(); closeOverlayTask()"
+        src="../assets/img/icon/close.svg" alt="">
+</div>
 </div>
 <form name="add_task" id="addTask_form" class="addTask-form" onsubmit="addTask(); return false" novalidate>
     <div id="edit_scrolling">
         <div id="addTask_form_container" class="addTask-form-container">
             <div class="addTask-left-side">
                 <label for="titel_input" class="addTask-label">Title<span class="required-star">&#42</span></label>
-                <input id="titel_input" class="addTask-input" placeholder="Enter a title" onkeydown="checkEnter(event)" maxlength="40" oninput="maxChar()">
+                <input id="titel_input" class="addTask-input" placeholder="Enter a title" onkeydown="checkEnter(event)"
+                    maxlength="40" oninput="maxChar()">
                 <p class="user-feedback d_none" id="error-long">You have reached the maximum title length! (Max 40)</p>
                 <p class="error-message" id="error-title">This field is required</p>
                 <label for="description_input" class="addTask-label">Description</label>
@@ -20,10 +23,19 @@
                 <input id="date_input" class="d_none" lang="en" type="date">
                 <div class="custom-calender">
                     <input type="text" class="addTask-input" placeholder="dd/mm/yyyy" id="date_input_picker">
-                    <label for="date_input_picker"><img class="custom-calender-icon" src="/assets/img/icon/calendar.svg" alt=""></label>
+                    <label for="date_input_picker"><img class="custom-calender-icon" src="/assets/img/icon/calendar.svg"
+                            alt=""></label>
                 </div>
-                <p class="user-feedback d_none" id="expired_date">The saved date has expired. Please select a new one.</p>
+                <p class="user-feedback d_none" id="expired_date">The saved date has expired. Please select a new one.
+                </p>
                 <p class="error-message" id="error-date">This field is required</p>
+                <div class="filepicker-contianer">
+                    <label class="addTask-label" for="filepicker">Upload files</label>
+                    <input type="file" id="filepicker" class="d_none">
+                    <input type="text" onclick="uploadFile()" value="Click to upload" readonly class="addTask-input after-icon">
+                    <img src="../assets/img/icon/upload.png" alt="">
+                </div>
+
             </div>
             <div id="spaceholder" class="placeholder-addTask"></div>
             <div class="addTask-right-side">
@@ -47,9 +59,10 @@
                 <label class="addTask-label">Assigned to</label>
                 <div class="assigned-select-dropdown-menu">
                     <label for="assigned_select_input" id="assigned_select" class="assigned-select">
-                        <input id="assigned_select_input" oninput="searchContactToTask()" onclick="openUserDropMenu()" onkeydown="checkEnter(event)"
-                            class="assigned-select-input" value="" placeholder="Select contacts to assign"><img
-                            id="dropdown_menu_arrow" src="../assets/img/icon/arrow_drop_down.svg" alt="">
+                        <input id="assigned_select_input" oninput="searchContactToTask()" onclick="openUserDropMenu()"
+                            onkeydown="checkEnter(event)" class="assigned-select-input" value=""
+                            placeholder="Select contacts to assign"><img id="dropdown_menu_arrow"
+                            src="../assets/img/icon/arrow_drop_down.svg" alt="">
                     </label>
                     <div id="list_overlay" class="list-overlay d_none" onclick="closeUserDropMenu()"></div>
                     <div id="add_user_list" class="add-user-list">
@@ -62,8 +75,8 @@
                 <div id="assigned_select_dropdown_menu" class="assigned-select-dropdown-menu">
                     <div>
                         <label id="category_input" class="assigned-select z-index-7" onclick="openCatDropMenu()">
-                            <input type="text" id="category_select_input"
-                                class="assigned-select-input" placeholder="Select task category" value="" readonly onkeydown="checkEnter(event)">
+                            <input type="text" id="category_select_input" class="assigned-select-input"
+                                placeholder="Select task category" value="" readonly onkeydown="checkEnter(event)">
                             <img id="dropdown_menu_arrow_select" src="../assets/img/icon/arrow_drop_down.svg" alt="">
                         </label>
                         <div class="category-list z-index-6" id="category_list" onclick="closeCatDropMenu()">
@@ -79,7 +92,8 @@
                 <label for="subtask_input" class="addTask-label">Subtasks</label>
                 <label for="subtask_input" id="subtask_input_label" class="addTask-input-container">
                     <input class="subtask-input" id="subtask_input" type="text" placeholder="Add new subtask"
-                        oninput="showAddSubtaskButton()" onfocus="addBorder()" onblur="removeBorder()" onkeydown="checkEnterAddSubtask(event);">
+                        oninput="showAddSubtaskButton()" onfocus="addBorder()" onblur="removeBorder()"
+                        onkeydown="checkEnterAddSubtask(event);">
                     <img id="subtask_plus_icon" class="subtask-plus-icon" src="../assets/img/icon/add.svg" alt="">
                     <div id="delete_and_add_icon" class="delete-and-add-icon d_none">
                         <div class="circle-padding-icon"><img src="../assets/img/icon/delete.svg" alt=""
@@ -93,26 +107,26 @@
                 </div>
             </div>
         </div>
-        </div>
-        <div class="addTask-footer footer-desktop">
-            <span class="required-field"><span class="required-star">&#42</span>This field is required</span>
-            <div class="addTask-footer-buttons">
-                <div id="cancel_button" class="cancel-task-button d_none" onclick="closeAddTask()">
-                    <span class="add-task-text ">Cancel</span>
-                    <img src="../assets/img/icon/close.svg" alt="plus">
-                </div>
-                <div id="clear_button" class="cancel-task-button" onclick="clearAddTaskField()">
-                    <span class="add-task-text ">Clear</span>
-                    <img src="../assets/img/icon/close.svg" alt="plus">
-                </div>
-                <button id="add_button" type="submit" class="create-task-button">
-                    <span class="add-task-text">Create task</span>
-                    <img src="../assets/img/icon/check.svg" alt="plus">
-                </button>
-                <button id="edit_button" type="submit" class="create-task-button d_none">
-                    <span class="add-task-text">Edit Task</span>
-                    <img src="../assets/img/icon/check.svg" alt="plus">
-                </button>
+    </div>
+    <div class="addTask-footer footer-desktop">
+        <span class="required-field"><span class="required-star">&#42</span>This field is required</span>
+        <div class="addTask-footer-buttons">
+            <div id="cancel_button" class="cancel-task-button d_none" onclick="closeAddTask()">
+                <span class="add-task-text ">Cancel</span>
+                <img src="../assets/img/icon/close.svg" alt="plus">
             </div>
+            <div id="clear_button" class="cancel-task-button" onclick="clearAddTaskField()">
+                <span class="add-task-text ">Clear</span>
+                <img src="../assets/img/icon/close.svg" alt="plus">
+            </div>
+            <button id="add_button" type="submit" class="create-task-button">
+                <span class="add-task-text">Create task</span>
+                <img src="../assets/img/icon/check.svg" alt="plus">
+            </button>
+            <button id="edit_button" type="submit" class="create-task-button d_none">
+                <span class="add-task-text">Edit Task</span>
+                <img src="../assets/img/icon/check.svg" alt="plus">
+            </button>
         </div>
+    </div>
 </form>

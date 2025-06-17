@@ -49,6 +49,20 @@
     flex: 1;
 }
 
+.filepicker-contianer {
+    position: relative;
+
+
+}
+.filepicker-contianer img {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    right: 20px;
+    bottom: 16px;
+    object-fit: contain;
+}
+
 .addTask-right-side {
     display: flex;
     flex-direction: column;
