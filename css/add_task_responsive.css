@@ -80,6 +80,14 @@
     .subtask-input {
         font-size: 16px !important;
     }
+
+    .addTask-right-side {
+        width: 100%;
+    }
+
+     .addTask-left-side {
+        width: 100%;
+    }
      
 }
 

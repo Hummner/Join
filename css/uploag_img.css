@@ -1,0 +1,132 @@
+.upload-input {
+    text-align: center;
+    border: dashed 1px #A8A8A8;
+    background-color: #E7E7E780;
+    position: relative;
+
+}
+
+.upload-input-container::after {
+    content: "";
+    position: absolute;
+    right: 116px;
+    bottom: 9px;
+    transform: translateY(-50%);
+    width: 15px;
+    height: 15px;
+    background-image: url(/assets/img/icon/add-upload.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    pointer-events: none
+}
+
+.upload-info {
+    font-size: 14px;
+    color: #848484;
+    margin-top: 8px;
+}
+
+.upload-input::placeholder {
+    color: #A8A8A8;
+}
+
+
+.filepicker-contianer {
+    position: relative;
+    margin-top: 16px;
+}
+
+.filepicker-icon {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    right: 20px;
+    bottom: 16px;
+    object-fit: contain;
+}
+
+.addTask-upload:focus {
+    border: 1px solid #D1D1D1 !important;
+    outline: none;
+}
+
+.addTask-upload:active {
+    border: 1px solid #29ABE2 !important;
+    outline: none;
+}
+
+.gallery-upload {
+    display: flex;
+    width: 100%;
+    overflow-x: auto;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.upload-index-img {
+    width: 112px;
+    height: 56px;
+    border-radius: 10px 10px 0 0;
+    object-fit: cover;
+}
+
+
+.image-preview {
+    width: 112px;
+    height: 84px;
+    border-radius: 10px;
+    border: #D1D1D1 1px solid;
+    position: relative;
+
+
+}
+
+.image-preview span {
+    color: #A8A8A8;
+    font-size: 14px;
+    text-align: center;
+    width: 100%;
+    height: 18px;
+    display: block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    padding: 0 4px;
+    position: relative;
+
+}
+
+.image-preview-hover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 56px;
+    border-radius: 10px 10px 0 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+
+}
+
+.icon-container {
+    width: 32px;
+    height: 32px;
+    border-radius: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.icon-container:hover {
+    background-color: #29ABE2;
+}
+
+.icon-container img {
+    object-fit: contain;
+    filter: brightness(0) saturate(100%) invert(97%) sepia(0%) saturate(14%) hue-rotate(314deg) brightness(103%) contrast(107%);
+}

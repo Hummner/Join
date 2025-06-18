@@ -46,33 +46,19 @@
 .addTask-left-side {
     display: flex;
     flex-direction: column;
-    flex: 1;
-}
-
-.filepicker-contianer {
-    position: relative;
-
-
-}
-.filepicker-contianer img {
-    width: 20px;
-    height: 20px;
-    position: absolute;
-    right: 20px;
-    bottom: 16px;
-    object-fit: contain;
+    width: 45%;
 }
 
 .addTask-right-side {
     display: flex;
     flex-direction: column;
-    flex: 1;
+    width: 45%;
     box-sizing: border-box;
 }
 
 .placeholder-addTask {
     width: 1px;
-    height: 424px;
+    height: 630px;
     background-color: #D1D1D1;
     margin: 0 24px;
 }
@@ -92,6 +78,7 @@
     cursor: pointer;
     width: 100%;
 }
+
 
 .addTask-input[type="date"]::-webkit-calendar-picker-indicator {
     opacity: 1;

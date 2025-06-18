@@ -29,16 +29,7 @@
                 <p class="user-feedback d_none" id="expired_date">The saved date has expired. Please select a new one.
                 </p>
                 <p class="error-message" id="error-date">This field is required</p>
-                <div class="filepicker-contianer">
-                    <label class="addTask-label" for="filepicker">Upload files</label>
-                    <input type="file" id="filepicker" class="d_none">
-                    <input type="text" onclick="filepicker.click()" value="Click to upload" readonly class="addTask-input after-icon">
-                    <img src="../assets/img/icon/upload.png" alt="">
-                </div>
 
-            </div>
-            <div id="spaceholder" class="placeholder-addTask"></div>
-            <div class="addTask-right-side">
                 <label class="addTask-label">Priority</label>
                 <div id="addTask_prio" class="addTask-prio">
                     <input value="urgent" name="prio" class="prio-urgent d_none" id="prio_urgent" type="radio">
@@ -55,21 +46,6 @@
                     <label class="prio-low-label" for="prio_low">
                         <div class="prio-label">Low<img src="../assets/img/icon/prio_low.svg"></div>
                     </label>
-                </div>
-                <label class="addTask-label">Assigned to</label>
-                <div class="assigned-select-dropdown-menu">
-                    <label for="assigned_select_input" id="assigned_select" class="assigned-select">
-                        <input id="assigned_select_input" oninput="searchContactToTask()" onclick="openUserDropMenu()"
-                            onkeydown="checkEnter(event)" class="assigned-select-input" value=""
-                            placeholder="Select contacts to assign"><img id="dropdown_menu_arrow"
-                            src="../assets/img/icon/arrow_drop_down.svg" alt="">
-                    </label>
-                    <div id="list_overlay" class="list-overlay d_none" onclick="closeUserDropMenu()"></div>
-                    <div id="add_user_list" class="add-user-list">
-                    </div>
-                </div>
-                <div id="user_logo_after_seleceted" class="user-logo-after-seleceted">
-                    <div class="user-counter d_none" id="user_counter"></div>
                 </div>
                 <label class="addTask-label">Category<span class="required-star">&#42</span></label>
                 <div id="assigned_select_dropdown_menu" class="assigned-select-dropdown-menu">
@@ -89,6 +65,48 @@
                     </div>
                 </div>
                 <p class="error-message" id="error-cat">This field is required</p>
+
+            </div>
+            <div id="spaceholder" class="placeholder-addTask"></div>
+            <div class="addTask-right-side">
+                <div class="filepicker-contianer">
+                    <label class="addTask-label upload-label" for="filepicker" id="filepicker_label">Attachments</label>
+                    <p class="upload-info">Allowed file types are JPEG and PNG</p>
+                    <div class="upload-input-container">
+                        <input type="file" onchange="getFilepicker()" id="filepicker" class="d_none" accept="image/*" multiple>
+                        <input type="text" onclick="filepicker.click()" placeholder="Drag a file or browse" readonly
+                            class="addTask-input addTask-upload upload-input">
+                    </div>
+                </div>
+                <div id="gallery_uplaod" class="gallery-upload">
+                    <!-- <div class="image-preview" onmouseenter="showDeleteIcon()" onmouseleave="hideDeleteIcon()" id="">
+                        <div class="image-preview-hover d_none" id="image_preview_hover">
+                            <div class="icon-container">
+                                <img src="/assets/img/icon/delete.svg" alt="">
+                            </div>
+                            
+                        </div>
+                        <img src="/assets/img/logo/cover_join.svg" class="upload-index-img"  alt="">
+                        <span>Datei Name.jpgsssssssssss</span>
+                    </div> -->
+                </div>
+
+                <label class="addTask-label">Assigned to</label>
+                <div class="assigned-select-dropdown-menu">
+                    <label for="assigned_select_input" id="assigned_select" class="assigned-select">
+                        <input id="assigned_select_input" oninput="searchContactToTask()" onclick="openUserDropMenu()"
+                            onkeydown="checkEnter(event)" class="assigned-select-input" value=""
+                            placeholder="Select contacts to assign"><img id="dropdown_menu_arrow"
+                            src="../assets/img/icon/arrow_drop_down.svg" alt="">
+                    </label>
+                    <div id="list_overlay" class="list-overlay d_none" onclick="closeUserDropMenu()"></div>
+                    <div id="add_user_list" class="add-user-list">
+                    </div>
+                </div>
+                <div id="user_logo_after_seleceted" class="user-logo-after-seleceted">
+                    <div class="user-counter d_none" id="user_counter"></div>
+                </div>
+
                 <label for="subtask_input" class="addTask-label">Subtasks</label>
                 <label for="subtask_input" id="subtask_input_label" class="addTask-input-container">
                     <input class="subtask-input" id="subtask_input" type="text" placeholder="Add new subtask"
