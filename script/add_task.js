@@ -15,6 +15,7 @@ async function getAddTaskHTML() {
   await loadContactsFromFirebase();
   renderUserList();
   datepicker();
+  getFilepicker();
 }
 
 
