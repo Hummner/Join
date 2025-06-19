@@ -176,6 +176,10 @@
     cursor: pointer;
 }
 
+.subtasks span {
+    color: #2A3647;
+}
+
 .spaceholder {
     width: 1px;
     background-color: #D1D1D1;

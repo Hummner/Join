@@ -1,129 +1,46 @@
-
 let allFiles = [];
-
-
+let viewer;
 
 
 async function getFilepicker() {
-
-
-
-
     let filepicker = document.getElementById('filepicker');
     let files = filepicker.files;
-    let gallery = document.getElementById("gallery_uplaod");
-
-
-
-
-
-
-
-
     if (files.length > 0) {
-
         Array.from(files).forEach(async (file) => {
             if (!file.type.startsWith('image/')) {
                 checkFileForm(file);
-                return
+                return;
             }
-
-            const blob = new Blob([file], { type: file.type })
-            console.log('New data: ', blob);
-
-
-
-
-
-
-
-
+            const sizeInKB = (file.size / 1024).toFixed(0);
             const compressedBase64 = await compressImage(file)
+            allFiles.push(fileObjekt(file, compressedBase64, sizeInKB));
+            renderPreviewImage();
+            filepicker.value = "";
+        });
+    }
+}
 
-            allFiles.push({
+function fileObjekt(file, compressedBase64, sizeInKB) {
+    return {
                 fileName: file.name,
                 fileType: file.type,
-                base64: compressedBase64
-            })
-
-
-
-            const img = document.createElement('img')
-            img.src = compressedBase64;
-            renderPreviewImage();
-            // img.setAttribute('onclick', "showImageViewer()")
-            // gallery.appendChild(img);
-
-
-
-        });
-
-
-    }
-
-
-
+                base64: compressedBase64,
+                size: sizeInKB
+            }
 }
 
 
 function renderPreviewImage() {
-    let galleryRef = document.getElementById('gallery_uplaod');
+    let galleryRef = document.getElementById('gallery_upload');
     galleryRef.innerHTML = "";
     allFiles.forEach((file, fileIndex) => {
 
-        galleryRef.innerHTML += getImagePreviewTemplate(file.fileName, file.base64, fileIndex);
+        galleryRef.innerHTML += getImagePreviewTemplate(file.fileName, file.base64, fileIndex, file.size);
     })
 
 
 }
 
-
-
-function getImagePreviewTemplate(fileName, url, fileIndex) {
-    return `      <div class="image-preview" onmouseenter="showDeleteIcon(${fileIndex})" onmouseleave="hideDeleteIcon(${fileIndex})" id="preview_image_${fileIndex}">
-                        <div class="image-preview-hover d_none" id="image_preview_hover_${fileIndex}">
-                            <div class="icon-container">
-                                <img src="/assets/img/icon/delete.svg" onclick="deletePreviewImage(${fileIndex});" alt="">
-                            </div>
-                            
-                        </div>
-                        <img src="${url}" class="upload-index-img"  alt="">
-                        <span>${fileName}</span>
-                    </div>`
-}
-
-function getImagePreviewTicketTemplate(fileName, url, fileIndex) {
-    return `      <div class="image-preview" onmouseenter="showDeleteIcon(${fileIndex})" onmouseleave="hideDeleteIcon(${fileIndex})" id="preview_image_${fileIndex}">
-                        <div class="image-preview-hover d_none" id="image_preview_hover_${fileIndex}">
-                            <div class="icon-container">
-                                <a href="${url}" download="${fileName}"><img src="/assets/img/icon/cloud_download.png" alt=""></a>
-                            </div>
-                            
-                        </div>
-                        <img src="${url}" class="upload-index-img"  alt="">
-                        <span>${fileName}</span>
-                    </div>`
-}
-
-function getImagePreviewEditTemplate(fileName, url, fileIndex, taskIndex) {
-    return `      <div class="image-preview" onmouseenter="showDeleteIcon(${fileIndex})" onmouseleave="hideDeleteIcon(${fileIndex})" id="preview_image_${fileIndex}">
-                        <div class="image-preview-hover d_none" id="image_preview_hover_${fileIndex}">
-                            <div class="icon-container">
-                                <img src="/assets/img/icon/delete.svg" onclick="deletePreviewImageEdit(${fileIndex}, ${taskIndex});" alt="">
-                            </div>
-                        </div>
-                        <img src="${url}" class="upload-index-img"  alt="">
-                        <span>${fileName}</span>
-                    </div>`
-}
-
-function blobToBase64(blob) {
-    return new Promise((resolve, _) => {
-        const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result);
-        reader.readAsDataURL(blob);
-    });
-}
 
 function deletePreviewImage(fileIndex) {
     allFiles.splice(fileIndex, 1);
@@ -135,17 +52,20 @@ function deletePreviewImageEdit(fileIndex, taskIndex) {
     checkAttachment(taskIndex);
 }
 
-function getUploadFileTemlpate(fileName) {
-    return `
-         <span>${fileName}</span>    
-        `
-}
 
-function showImageViewer() {
-    let gallery = document.getElementById("gallery_uplaod");
-    const galleryViewer = new Viewer(gallery);
+function renderImageViewer(id, fileIndex) {
+    let gallery = document.getElementById(id);
+    if (viewer) {
+        viewer.destroy();
+    }
+    viewer = new Viewer(gallery, {
+        inline: false,
+        filter(image) {
+            return image.classList.contains("upload-index-img");
+        }
+    });
+    viewer.view(fileIndex);
 }
-
 
 
 
@@ -241,6 +161,7 @@ function createAttachmentObject(file) {
     attachment.fileName = file.fileName
     attachment.fileType = file.fileType
     attachment.base64 = file.base64
+    attachment.size = file.size
     return attachment;
 
 }

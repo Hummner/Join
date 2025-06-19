@@ -71,15 +71,24 @@
             <div class="addTask-right-side" id="addTask_right_side">
                 <div class="filepicker-contianer">
                     <label class="addTask-label upload-label" for="filepicker" id="filepicker_label">Attachments</label>
-                    <p class="upload-info">Allowed file types are JPEG and PNG</p>
+                    <div class="upload-header">
+                        <p class="upload-info">Allowed file types are JPEG and PNG</p>
+                        <div class="all-delete">
+                            <img src="/assets/img/icon/delete.svg">
+                            <span>Delete All</span>
+                        </div>
+                    </div>
                     <div class="upload-input-container">
                         <input type="file" onchange="getFilepicker()" id="filepicker" class="d_none" accept="image/*" multiple>
-                        <input type="text" onclick="filepicker.click()" placeholder="Drag a file or browse" readonly
+                        <div onclick="filepicker.click()"
                             class="addTask-input addTask-upload upload-input">
+                            <span>Drag a file or browse <img src="/assets/img/icon/add-upload.png"></span>
+                        </div>
                     </div>
                 </div>
-                <div id="gallery_uplaod" class="gallery-upload">
+                <div id="gallery_upload" class="gallery-upload">
                 </div>
+                <div id="gallery"></div>
 
                 <label class="addTask-label">Assigned to</label>
                 <div class="assigned-select-dropdown-menu">

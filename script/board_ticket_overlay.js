@@ -351,21 +351,26 @@ function dateForm(taskIndex) {
 }
 
 function renderAttachments(taskIndex) {
-    debugger
     let gallery = document.getElementById('ticket_gallery');
     gallery.innerHTML = "";
-    tasks[taskIndex].attachment.forEach((att, index) => {
-        gallery.innerHTML += getImagePreviewTicketTemplate(att.fileName, att.base64, index);
-    })
+
+    if (tasks[taskIndex].attachment.length > 0) {
+        tasks[taskIndex].attachment.forEach((att, index) => {
+            gallery.innerHTML += getImagePreviewTicketTemplate(att.fileName, att.base64, index, att.size);
+        })
+    } else {
+        gallery.innerHTML = "<span style='opacity: 0.2; font-size: 16px'>No attachment added</span>";
+    }
 }
 
 function checkAttachment(taskIndex) {
-    let gallery = document.getElementById('gallery_uplaod');
-    if(!tasks[taskIndex].attachment.length > 0) return;
+    let gallery = document.getElementById('gallery_upload');
+    if (!tasks[taskIndex].attachment.length > 0) return;
     allFiles = [];
     allFiles = tasks[taskIndex].attachment;
     gallery.innerHTML = "";
     allFiles.forEach((att, index) => {
-        gallery.innerHTML += getImagePreviewEditTemplate(att.fileName, att.base64, index, taskIndex);
+        gallery.innerHTML += getImagePreviewEditTemplate(att.fileName, att.base64, index, taskIndex, att.size);
     })
 }
+

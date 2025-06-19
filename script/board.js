@@ -363,7 +363,8 @@ function arrayAttachment(index, responseToJson, tasksKeysArray) {
       attachments.push({
         fileName: responseToJson[tasksKeysArray[index]].attachment[attachmentKeys[indexAttachment]].fileName,
         fileType: responseToJson[tasksKeysArray[index]].attachment[attachmentKeys[indexAttachment]].fileType,
-        base64: responseToJson[tasksKeysArray[index]].attachment[attachmentKeys[indexAttachment]].base64
+        base64: responseToJson[tasksKeysArray[index]].attachment[attachmentKeys[indexAttachment]].base64,
+        size: responseToJson[tasksKeysArray[index]].attachment[attachmentKeys[indexAttachment]].size
       });
     }
   }
@@ -379,7 +380,8 @@ function arrayAttachmentAfterEdit(taskIndex) {
       attachments.push({
         fileName: tasks[taskIndex].attachment[attachmentKeys[indexAttachment]].fileName,
         fileType: tasks[taskIndex].attachment[attachmentKeys[indexAttachment]].fileType,
-        base64: tasks[taskIndex].attachment[attachmentKeys[indexAttachment]].base64
+        base64: tasks[taskIndex].attachment[attachmentKeys[indexAttachment]].base64,
+        size: tasks[taskIndex].attachment[attachmentKeys[indexAttachment]].size
       });
     }
   }

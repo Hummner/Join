@@ -186,3 +186,41 @@ function showErrorAddedTask() {
 function showTaskDeleted() {
     return `<p>Task deleted successfully!</p><img class="feedback-img" src="/assets/img/icon/delete.svg">`;
 }
+
+function getImagePreviewTemplate(fileName, url, fileIndex, size) {
+    return `      <div class="image-preview" onmouseenter="showDeleteIcon(${fileIndex})" onmouseleave="hideDeleteIcon(${fileIndex})" id="preview_image_${fileIndex}">
+                        <div class="image-preview-hover d_none" id="image_preview_hover_${fileIndex}" onclick="renderImageViewer('gallery_upload', ${fileIndex})">
+                            <div class="icon-container id="icon_container_${fileIndex}">
+                                <img src="/assets/img/icon/delete.svg" onclick="deletePreviewImage(${fileIndex});" alt="">
+                            </div>
+                            
+                        </div>
+                        <img src="${url}" class="upload-index-img"  alt="${fileName}, ${size} kB">
+                        <span>${fileName}</span>
+                    </div>`
+}
+
+function getImagePreviewTicketTemplate(fileName, url, fileIndex, size) {
+    return `      <div class="image-preview" onmouseenter="showDeleteIcon(${fileIndex})" onmouseleave="hideDeleteIcon(${fileIndex})" id="preview_image_${fileIndex}">
+                        <div class="image-preview-hover d_none" id="image_preview_hover_${fileIndex}" onclick="renderImageViewer('ticket_gallery', ${fileIndex})">
+                            <div class="icon-container">
+                                <a href="${url}" download="${fileName}"><img src="/assets/img/icon/cloud_download.png" alt=""></a>
+                            </div>
+                            
+                        </div>
+                        <img src="${url}" class="upload-index-img"  alt="${fileName}, ${size} kB">
+                        <span>${fileName}</span>
+                    </div>`
+}
+
+function getImagePreviewEditTemplate(fileName, url, fileIndex, taskIndex, size) {
+    return `      <div class="image-preview" onmouseenter="showDeleteIcon(${fileIndex})" onmouseleave="hideDeleteIcon(${fileIndex})" id="preview_image_${fileIndex}">
+                        <div class="image-preview-hover d_none" id="image_preview_hover_${fileIndex}" onclick="renderImageViewer('gallery_upload', ${fileIndex})">
+                            <div class="icon-container">
+                                <img src="/assets/img/icon/delete.svg" onclick="deletePreviewImageEdit(${fileIndex}, ${taskIndex});" alt="">
+                            </div>
+                        </div>
+                        <img src="${url}" class="upload-index-img"  alt="${fileName}, ${size} kB">
+                        <span>${fileName}</span>
+                    </div>`
+}
