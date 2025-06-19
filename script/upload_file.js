@@ -79,7 +79,7 @@ function renderPreviewImage() {
 
 
 
-function getImagePreviewTemplate(fileName, url, fileIndex, renderFunction) {
+function getImagePreviewTemplate(fileName, url, fileIndex) {
     return `      <div class="image-preview" onmouseenter="showDeleteIcon(${fileIndex})" onmouseleave="hideDeleteIcon(${fileIndex})" id="preview_image_${fileIndex}">
                         <div class="image-preview-hover d_none" id="image_preview_hover_${fileIndex}">
                             <div class="icon-container">
@@ -96,7 +96,7 @@ function getImagePreviewTicketTemplate(fileName, url, fileIndex) {
     return `      <div class="image-preview" onmouseenter="showDeleteIcon(${fileIndex})" onmouseleave="hideDeleteIcon(${fileIndex})" id="preview_image_${fileIndex}">
                         <div class="image-preview-hover d_none" id="image_preview_hover_${fileIndex}">
                             <div class="icon-container">
-                                <img src="/assets/img/icon/cloud_download.png" onclick="deletePreviewImage(${fileIndex})" alt="">
+                                <a href="${url}" download="${fileName}"><img src="/assets/img/icon/cloud_download.png" alt=""></a>
                             </div>
                             
                         </div>
@@ -131,7 +131,7 @@ function deletePreviewImage(fileIndex) {
 }
 
 function deletePreviewImageEdit(fileIndex, taskIndex) {
-    tasks[taskIndex].attachment.splice(fileIndex, 1);
+    allFiles.splice(fileIndex, 1);
     checkAttachment(taskIndex);
 }
 

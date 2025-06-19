@@ -68,7 +68,6 @@ function getNewTask() {
     let assignedTo = getAssignedTo();
     let id = generateID();
     let condition = currentCondition;
-    debugger
     let attachment = getAttachment().attachment;
     return { title, descripton, date, category, priority, subtask, assignedTo, id, condition, attachment };
 }
@@ -88,6 +87,7 @@ function addEditedTask(taskIndex) {
     tasks[taskIndex] = newEditedTask;
     getSubtasksArrayAfterEdit(taskIndex);
     getAssignedToArrayAfterEdit(taskIndex);
+    arrayAttachmentAfterEdit(taskIndex);
     renderSingleTaskInToColumn(taskIndex);
     closeOverlayTask();
     clearOverlay();
@@ -110,7 +110,8 @@ function getEditedTask(taskIndex) {
     let assignedTo = getAssignedTo();
     let id = tasks[taskIndex].id;
     let condition = tasks[taskIndex].condition;
-    return { title, descripton, date, category, priority, subtask, assignedTo, id, condition };
+    let attachment = getAttachment().attachment;
+    return { title, descripton, date, category, priority, subtask, assignedTo, id, condition, attachment };
 }
 
 

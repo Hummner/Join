@@ -351,6 +351,7 @@ function dateForm(taskIndex) {
 }
 
 function renderAttachments(taskIndex) {
+    debugger
     let gallery = document.getElementById('ticket_gallery');
     gallery.innerHTML = "";
     tasks[taskIndex].attachment.forEach((att, index) => {
@@ -359,11 +360,12 @@ function renderAttachments(taskIndex) {
 }
 
 function checkAttachment(taskIndex) {
-    debugger
     let gallery = document.getElementById('gallery_uplaod');
     if(!tasks[taskIndex].attachment.length > 0) return;
+    allFiles = [];
+    allFiles = tasks[taskIndex].attachment;
     gallery.innerHTML = "";
-    tasks[taskIndex].attachment.forEach((att, index) => {
+    allFiles.forEach((att, index) => {
         gallery.innerHTML += getImagePreviewEditTemplate(att.fileName, att.base64, index, taskIndex);
     })
 }

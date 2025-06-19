@@ -369,3 +369,20 @@ function arrayAttachment(index, responseToJson, tasksKeysArray) {
   }
   return attachments;
 }
+
+function arrayAttachmentAfterEdit(taskIndex) {
+  let attachments = [];
+  if (tasks[taskIndex].attachment !== undefined) {
+    let attachmentKeys = Object.keys(tasks[taskIndex].attachment);
+
+    for (let indexAttachment = 0; indexAttachment < attachmentKeys.length; indexAttachment++) {
+      attachments.push({
+        fileName: tasks[taskIndex].attachment[attachmentKeys[indexAttachment]].fileName,
+        fileType: tasks[taskIndex].attachment[attachmentKeys[indexAttachment]].fileType,
+        base64: tasks[taskIndex].attachment[attachmentKeys[indexAttachment]].base64
+      });
+    }
+  }
+  return tasks[taskIndex].attachment = attachments;
+}
+
