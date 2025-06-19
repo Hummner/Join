@@ -29,7 +29,7 @@ function creatOverlayFromTask(taskIndex) {
     renderPrioIntoTaskOverlay(taskIndex);
     renderCategoryIntoTaskOverlay(taskIndex);
     renderButtons(taskIndex);
-
+    renderAttachments(taskIndex);
 }
 
 
@@ -163,6 +163,8 @@ function fitEditTaskToContainer() {
     document.getElementById("addTask_form_container").classList.add("overflow-hidden");
     document.getElementById("addTask_prio").classList.add("gap-8");
     document.getElementById("assigned_select_dropdown_menu").classList.add("unclickable");
+    document.getElementById("addTask_left_side").classList.add("width-100");
+    document.getElementById("addTask_right_side").classList.add("width-100");
 }
 
 
@@ -176,6 +178,7 @@ function currentInputFieldvalue(taskIndex) {
     document.getElementById("date_input").value = getDate(taskIndex);
     checkPrio(taskIndex);
     checkAssignedTo(taskIndex);
+    checkAttachment(taskIndex);
     checkCategory(taskIndex);
     checkSubtasks(taskIndex);
     renderEditButton(taskIndex);
@@ -191,7 +194,7 @@ function getDate(taskIndex) {
     const dateFromTask = new Date(defaultDate);
     const today = new Date();
     let hiddenInput = document.getElementById("date_input").value
-    
+
 
     if (flatpickrInstance) {
         flatpickrInstance.setDate(dateFromTask, true);
@@ -201,7 +204,7 @@ function getDate(taskIndex) {
         if (expiredDate) {
             expiredDate.classList.add("d_none");
         }
-        
+
         hiddenInput = defaultDate;
     }
 
@@ -342,7 +345,25 @@ function dateForm(taskIndex) {
     const [year, month, day] = firebaseDate.split("-");
 
     const timeEl = document.getElementById("overlay_date");
-    timeEl.setAttribute("datetime", firebaseDate); // maschinenlesbar
+    timeEl.setAttribute("datetime", firebaseDate);
 
     return timeEl.textContent = `${day}/${month}/${year}`;
+}
+
+function renderAttachments(taskIndex) {
+    let gallery = document.getElementById('ticket_gallery');
+    gallery.innerHTML = "";
+    tasks[taskIndex].attachment.forEach((att, index) => {
+        gallery.innerHTML += getImagePreviewTicketTemplate(att.fileName, att.base64, index);
+    })
+}
+
+function checkAttachment(taskIndex) {
+    debugger
+    let gallery = document.getElementById('gallery_uplaod');
+    if(!tasks[taskIndex].attachment.length > 0) return;
+    gallery.innerHTML = "";
+    tasks[taskIndex].attachment.forEach((att, index) => {
+        gallery.innerHTML += getImagePreviewEditTemplate(att.fileName, att.base64, index, taskIndex);
+    })
 }

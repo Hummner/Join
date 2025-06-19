@@ -352,3 +352,20 @@ function resetDisplayMovtoDialog() {
   document.getElementById("move_to_arrow_up").classList.add("d_none");
   document.getElementById("move_to_arrow_down").classList.add("d_none");
 }
+
+
+function arrayAttachment(index, responseToJson, tasksKeysArray) {
+  let attachments = [];
+  if (responseToJson[tasksKeysArray[index]].attachment !== undefined) {
+    let attachmentKeys = Object.keys(responseToJson[tasksKeysArray[index]].attachment);
+
+    for (let indexAttachment = 0; indexAttachment < attachmentKeys.length; indexAttachment++) {
+      attachments.push({
+        fileName: responseToJson[tasksKeysArray[index]].attachment[attachmentKeys[indexAttachment]].fileName,
+        fileType: responseToJson[tasksKeysArray[index]].attachment[attachmentKeys[indexAttachment]].fileType,
+        base64: responseToJson[tasksKeysArray[index]].attachment[attachmentKeys[indexAttachment]].base64
+      });
+    }
+  }
+  return attachments;
+}

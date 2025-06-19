@@ -77,13 +77,40 @@ function renderPreviewImage() {
 
 }
 
-function getImagePreviewTemplate(fileName, url, fileIndex) {
+
+
+function getImagePreviewTemplate(fileName, url, fileIndex, renderFunction) {
     return `      <div class="image-preview" onmouseenter="showDeleteIcon(${fileIndex})" onmouseleave="hideDeleteIcon(${fileIndex})" id="preview_image_${fileIndex}">
                         <div class="image-preview-hover d_none" id="image_preview_hover_${fileIndex}">
                             <div class="icon-container">
-                                <img src="/assets/img/icon/delete.svg" onclick="deletePreviewImage(${fileIndex})" alt="">
+                                <img src="/assets/img/icon/delete.svg" onclick="deletePreviewImage(${fileIndex});" alt="">
                             </div>
                             
+                        </div>
+                        <img src="${url}" class="upload-index-img"  alt="">
+                        <span>${fileName}</span>
+                    </div>`
+}
+
+function getImagePreviewTicketTemplate(fileName, url, fileIndex) {
+    return `      <div class="image-preview" onmouseenter="showDeleteIcon(${fileIndex})" onmouseleave="hideDeleteIcon(${fileIndex})" id="preview_image_${fileIndex}">
+                        <div class="image-preview-hover d_none" id="image_preview_hover_${fileIndex}">
+                            <div class="icon-container">
+                                <img src="/assets/img/icon/cloud_download.png" onclick="deletePreviewImage(${fileIndex})" alt="">
+                            </div>
+                            
+                        </div>
+                        <img src="${url}" class="upload-index-img"  alt="">
+                        <span>${fileName}</span>
+                    </div>`
+}
+
+function getImagePreviewEditTemplate(fileName, url, fileIndex, taskIndex) {
+    return `      <div class="image-preview" onmouseenter="showDeleteIcon(${fileIndex})" onmouseleave="hideDeleteIcon(${fileIndex})" id="preview_image_${fileIndex}">
+                        <div class="image-preview-hover d_none" id="image_preview_hover_${fileIndex}">
+                            <div class="icon-container">
+                                <img src="/assets/img/icon/delete.svg" onclick="deletePreviewImageEdit(${fileIndex}, ${taskIndex});" alt="">
+                            </div>
                         </div>
                         <img src="${url}" class="upload-index-img"  alt="">
                         <span>${fileName}</span>
@@ -99,9 +126,13 @@ function blobToBase64(blob) {
 }
 
 function deletePreviewImage(fileIndex) {
-    debugger
     allFiles.splice(fileIndex, 1);
     renderPreviewImage();
+}
+
+function deletePreviewImageEdit(fileIndex, taskIndex) {
+    tasks[taskIndex].attachment.splice(fileIndex, 1);
+    checkAttachment(taskIndex);
 }
 
 function getUploadFileTemlpate(fileName) {
@@ -193,3 +224,34 @@ function showDeleteIcon(fileIndex) {
 function hideDeleteIcon(fileIndex) {
     document.getElementById('image_preview_hover_' + fileIndex).classList.add('d_none')
 }
+
+function getAttachment() {
+    const attachmentObj = {}
+    allFiles.forEach((file, i) => {
+        let att = createAttachmentObject(file);
+        attachmentObj[`attachment_${i}`] = att
+    })
+
+    return { attachment: attachmentObj };
+
+}
+
+function createAttachmentObject(file) {
+    let attachment = {}
+    attachment.fileName = file.fileName
+    attachment.fileType = file.fileType
+    attachment.base64 = file.base64
+    return attachment;
+
+}
+
+
+
+
+
+
+
+
+
+
+

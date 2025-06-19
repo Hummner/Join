@@ -166,7 +166,8 @@ function firbaseObject(index, responseToJson, tasksKeysArray) {
     subtask: arraySubtasks(index, responseToJson, tasksKeysArray),
     assignedTo: arrayAssignedTo(index, responseToJson, tasksKeysArray),
     id: tasksKeysArray[index],
-    condition: responseToJson[tasksKeysArray[index]].condition
+    condition: responseToJson[tasksKeysArray[index]].condition,
+    attachment : arrayAttachment(index, responseToJson, tasksKeysArray)
   };
 }
 

@@ -131,6 +131,14 @@
     color: #2A3647
 }
 
+.attachments-section {
+    margin-bottom: 24px;
+}
+
+.attachments-section span {
+    color: #2A3647
+}
+
 .subtask-overlay {
     display: flex;
     margin-left: 12px;

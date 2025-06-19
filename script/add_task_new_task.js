@@ -68,7 +68,9 @@ function getNewTask() {
     let assignedTo = getAssignedTo();
     let id = generateID();
     let condition = currentCondition;
-    return { title, descripton, date, category, priority, subtask, assignedTo, id, condition };
+    debugger
+    let attachment = getAttachment().attachment;
+    return { title, descripton, date, category, priority, subtask, assignedTo, id, condition, attachment };
 }
 
 

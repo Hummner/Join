@@ -11,7 +11,7 @@
 <form name="add_task" id="addTask_form" class="addTask-form" onsubmit="addTask(); return false" novalidate>
     <div id="edit_scrolling">
         <div id="addTask_form_container" class="addTask-form-container">
-            <div class="addTask-left-side">
+            <div class="addTask-left-side" id="addTask_left_side">
                 <label for="titel_input" class="addTask-label">Title<span class="required-star">&#42</span></label>
                 <input id="titel_input" class="addTask-input" placeholder="Enter a title" onkeydown="checkEnter(event)"
                     maxlength="40" oninput="maxChar()">
@@ -68,7 +68,7 @@
 
             </div>
             <div id="spaceholder" class="placeholder-addTask"></div>
-            <div class="addTask-right-side">
+            <div class="addTask-right-side" id="addTask_right_side">
                 <div class="filepicker-contianer">
                     <label class="addTask-label upload-label" for="filepicker" id="filepicker_label">Attachments</label>
                     <p class="upload-info">Allowed file types are JPEG and PNG</p>
@@ -79,16 +79,6 @@
                     </div>
                 </div>
                 <div id="gallery_uplaod" class="gallery-upload">
-                    <!-- <div class="image-preview" onmouseenter="showDeleteIcon()" onmouseleave="hideDeleteIcon()" id="">
-                        <div class="image-preview-hover d_none" id="image_preview_hover">
-                            <div class="icon-container">
-                                <img src="/assets/img/icon/delete.svg" alt="">
-                            </div>
-                            
-                        </div>
-                        <img src="/assets/img/logo/cover_join.svg" class="upload-index-img"  alt="">
-                        <span>Datei Name.jpgsssssssssss</span>
-                    </div> -->
                 </div>
 
                 <label class="addTask-label">Assigned to</label>
