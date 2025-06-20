@@ -156,7 +156,6 @@ function renderImageViewer(id, fileIndex, taskIndex) {
             }
         },
         shown() {
-            // Jetzt ist die Toolbar im DOM → Button kann angesprochen werden
             const deleteButton = document.querySelector('.viewer-delete');
             if (deleteButton && allFiles.length === 0) {
                 deleteButton.classList.add('d_none');
