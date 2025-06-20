@@ -78,6 +78,7 @@ async function openAddTask(condition = "") {
     document.getElementById("add_container").classList.remove("overlay-container-sliding");
   }, 1);
   document.getElementById("body").classList.add("overflow-hidden");
+  fitSublistOpen();
   renderUserList();
   datepicker();
 }
@@ -93,7 +94,34 @@ function closeAddTask() {
     document.getElementById("add_container").classList.add("d_none");
   }, 100);
   document.getElementById("body").classList.remove("overflow-hidden");
+  fitSublistClose();
+  clearAttachment();
 }
+
+
+/**
+ * Adds the 'addTask-subtask-fit' class to the element with the ID 'sub_list',
+ * if the element exists. Typically used to visually open or expand a subtask list.
+ */
+function fitSublistOpen() {
+
+  let id = document.getElementById("sub_list")
+  if (id) {
+    id.classList.add('addTask-subtask-fit');
+  }
+}
+
+/**
+ * Removes the 'addTask-subtask-fit' class from the element with the ID 'sub_list',
+ * if the element exists. Typically used to visually close or collapse a subtask list.
+ */
+function fitSublistClose() {
+  let id = document.getElementById("sub_list")
+  if (id) {
+    id.classList.remove('addTask-subtask-fit');
+  }
+}
+
 
 
 /**
@@ -354,6 +382,14 @@ function resetDisplayMovtoDialog() {
 }
 
 
+/**
+ * Extracts the attachments of a specific task from a response and returns them as an array.
+ *
+ * @param {number} index - Index of the task in `tasksKeysArray`
+ * @param {Object} responseToJson - The parsed JSON response object containing all tasks
+ * @param {Array<string>} tasksKeysArray - Array containing the keys of the tasks
+ * @returns {Array<Object>} - Array of attachment objects with file information
+ */
 function arrayAttachment(index, responseToJson, tasksKeysArray) {
   let attachments = [];
   if (responseToJson[tasksKeysArray[index]].attachment !== undefined) {
@@ -371,6 +407,14 @@ function arrayAttachment(index, responseToJson, tasksKeysArray) {
   return attachments;
 }
 
+
+/**
+ * Converts the attachments of a specific task in the global `tasks` array into an array of attachment objects
+ * and replaces the original structure with the resulting array.
+ *
+ * @param {number} taskIndex - The index of the task in the `tasks` array
+ * @returns {Array<Object>} - The new array of attachment objects
+ */
 function arrayAttachmentAfterEdit(taskIndex) {
   let attachments = [];
   if (tasks[taskIndex].attachment !== undefined) {
@@ -387,4 +431,5 @@ function arrayAttachmentAfterEdit(taskIndex) {
   }
   return tasks[taskIndex].attachment = attachments;
 }
+
 

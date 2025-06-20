@@ -237,6 +237,12 @@ function clearAddTaskField() {
   successfulClearTask();
   userFeedback();
   renderUserList();
+  clearAttachment();
+}
+
+function clearAttachment() {
+  allFiles = [];
+  renderPreviewImage();
 }
 
 
@@ -256,6 +262,7 @@ function clearAddTaskAfterAdd() {
   document.getElementById("error-long").classList.add("d_none");
   clearSubtaskInput();
   renderUserList();
+  clearAttachment();
 }
 
 

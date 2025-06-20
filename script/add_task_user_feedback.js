@@ -117,3 +117,17 @@ function userFeedback() {
     setTimeout(() => { success.classList.add('d-none'); }, 1730);
   }, 200);
 }
+
+
+/**
+* Animates a temporary success message to the user.
+*/
+function userFeedbackImage() {
+  setTimeout(() => {
+    let success = document.getElementById('invalid_image');
+    success.classList.remove('d-none');
+    setTimeout(() => { success.classList.add('show-successful'); }, 1);
+    setTimeout(() => { success.classList.remove('show-successful'); }, 3000);
+    setTimeout(() => { success.classList.add('d-none'); }, 3200);
+  }, 200);
+}

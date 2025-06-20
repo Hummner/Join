@@ -182,45 +182,84 @@ function showErrorAddedTask() {
  * 
  * @returns {string} - HTML string for the feedback.
  */
-
 function showTaskDeleted() {
     return `<p>Task deleted successfully!</p><img class="feedback-img" src="/assets/img/icon/delete.svg">`;
 }
 
+
+/**
+ * Generates the HTML template for image preview in the normal upload mode.
+ *
+ * @param {string} fileName - The name of the uploaded file
+ * @param {string} url - The base64 or blob URL of the image file
+ * @param {number} fileIndex - The index of the image in the preview or array
+ * @param {string|number} size - The file size in kilobytes
+ * @returns {string} - HTML string for the image preview
+ */
 function getImagePreviewTemplate(fileName, url, fileIndex, size) {
     return `      <div class="image-preview" onmouseenter="showDeleteIcon(${fileIndex})" onmouseleave="hideDeleteIcon(${fileIndex})" id="preview_image_${fileIndex}">
                         <div class="image-preview-hover d_none" id="image_preview_hover_${fileIndex}" onclick="renderImageViewer('gallery_upload', ${fileIndex})">
-                            <div class="icon-container id="icon_container_${fileIndex}">
-                                <img src="/assets/img/icon/delete.svg" onclick="deletePreviewImage(${fileIndex});" alt="">
+                            <div class="icon-container" id="icon_container_${fileIndex}" onclick="deletePreviewImage(${fileIndex});event.stopPropagation()">
+                                <img src="/assets/img/icon/delete.svg">
                             </div>
-                            
                         </div>
                         <img src="${url}" class="upload-index-img"  alt="${fileName}, ${size} kB">
                         <span>${fileName}</span>
                     </div>`
 }
 
-function getImagePreviewTicketTemplate(fileName, url, fileIndex, size) {
+
+/**
+ * Generates the HTML template for image preview in a ticket (e.g., support or comment section).
+ *
+ * @param {string} fileName - The name of the file
+ * @param {string} url - The image URL (base64 or public)
+ * @param {number} fileIndex - The index of the image
+ * @param {string|number} size - The file size in kilobytes
+ * @param {number} taskIndex - The index of the task
+ * @returns {string} - HTML string for the ticket preview with download functionality
+ */
+function getImagePreviewTicketTemplate(fileName, url, fileIndex, size, taskIndex) {
     return `      <div class="image-preview" onmouseenter="showDeleteIcon(${fileIndex})" onmouseleave="hideDeleteIcon(${fileIndex})" id="preview_image_${fileIndex}">
-                        <div class="image-preview-hover d_none" id="image_preview_hover_${fileIndex}" onclick="renderImageViewer('ticket_gallery', ${fileIndex})">
+                        <div class="image-preview-hover d_none" id="image_preview_hover_${fileIndex}" onclick="renderImageViewer('ticket_gallery', ${fileIndex}, ${taskIndex})">
                             <div class="icon-container">
-                                <a href="${url}" download="${fileName}"><img src="/assets/img/icon/cloud_download.png" alt=""></a>
+                                <a href="${url}" download="${fileName}" onclick="event.stopPropagation()"><img src="/assets/img/icon/cloud_download.png" alt=""></a>
                             </div>
-                            
                         </div>
                         <img src="${url}" class="upload-index-img"  alt="${fileName}, ${size} kB">
                         <span>${fileName}</span>
                     </div>`
 }
 
+
+/**
+ * Generates the HTML template for image preview in edit mode of a task.
+ *
+ * @param {string} fileName - The name of the file
+ * @param {string} url - The URL for the image preview
+ * @param {number} fileIndex - The index of the image in the list
+ * @param {number} taskIndex - The index of the task in the tasks array
+ * @param {string|number} size - The file size in kilobytes
+ * @returns {string} - HTML string for the editable image preview
+ */
 function getImagePreviewEditTemplate(fileName, url, fileIndex, taskIndex, size) {
     return `      <div class="image-preview" onmouseenter="showDeleteIcon(${fileIndex})" onmouseleave="hideDeleteIcon(${fileIndex})" id="preview_image_${fileIndex}">
-                        <div class="image-preview-hover d_none" id="image_preview_hover_${fileIndex}" onclick="renderImageViewer('gallery_upload', ${fileIndex})">
-                            <div class="icon-container">
-                                <img src="/assets/img/icon/delete.svg" onclick="deletePreviewImageEdit(${fileIndex}, ${taskIndex});" alt="">
+                        <div class="image-preview-hover d_none" id="image_preview_hover_${fileIndex}" onclick="renderImageViewer('gallery_upload', ${fileIndex}, ${taskIndex})">
+                            <div class="icon-container" onclick="deletePreviewImageEdit(${fileIndex}, ${taskIndex}); event.stopPropagation()">
+                                <img src="/assets/img/icon/delete.svg">
                             </div>
                         </div>
                         <img src="${url}" class="upload-index-img"  alt="${fileName}, ${size} kB">
                         <span>${fileName}</span>
                     </div>`
+}
+
+
+/**
+ * Displays feedback when there is an error adding an image.
+ * 
+ * @returns {string} - HTML string for the error feedback.
+ */
+function showInvalidImage() {
+    return `<p>This file format is not allowed!<br><span>You can only upload JPEG and PNG.</span></p>`;
 }

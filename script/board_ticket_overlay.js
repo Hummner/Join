@@ -340,6 +340,13 @@ function deleteTaskFromTaskArray(taskIndex) {
 }
 
 
+/**
+ * Formats the date of a task in the `DD/MM/YYYY` format and sets it as the `datetime` attribute
+ * as well as the visible text content of the element with the ID `"overlay_date"`.
+ *
+ * @param {number} taskIndex - The index of the task in the `tasks` array
+ * @returns {string} - The formatted date as text
+ */
 function dateForm(taskIndex) {
     let firebaseDate = tasks[taskIndex].date
     const [year, month, day] = firebaseDate.split("-");
@@ -350,27 +357,41 @@ function dateForm(taskIndex) {
     return timeEl.textContent = `${day}/${month}/${year}`;
 }
 
+
+/**
+ * Renders the existing attachments of a task into the preview gallery (`#ticket_gallery`).
+ * Displays a message if no attachments are available.
+ *
+ * @param {number} taskIndex - The index of the task in the `tasks` array
+ */
 function renderAttachments(taskIndex) {
     let gallery = document.getElementById('ticket_gallery');
     gallery.innerHTML = "";
-
     if (tasks[taskIndex].attachment.length > 0) {
         tasks[taskIndex].attachment.forEach((att, index) => {
-            gallery.innerHTML += getImagePreviewTicketTemplate(att.fileName, att.base64, index, att.size);
+            gallery.innerHTML += getImagePreviewTicketTemplate(att.fileName, att.base64, index, att.size, taskIndex);
         })
     } else {
         gallery.innerHTML = "<span style='opacity: 0.2; font-size: 16px'>No attachment added</span>";
     }
 }
 
+
+/**
+ * Checks whether a task has attachments and renders them in the upload gallery (`#gallery_upload`).
+ * Copies the attachments into the global `allFiles` array and displays them in an editable format.
+ *
+ * @param {number} taskIndex - The index of the task in the `tasks` array
+ */
 function checkAttachment(taskIndex) {
     let gallery = document.getElementById('gallery_upload');
     if (!tasks[taskIndex].attachment.length > 0) return;
     allFiles = [];
-    allFiles = tasks[taskIndex].attachment;
+    allFiles = [...tasks[taskIndex].attachment];
     gallery.innerHTML = "";
     allFiles.forEach((att, index) => {
-        gallery.innerHTML += getImagePreviewEditTemplate(att.fileName, att.base64, index, taskIndex, att.size);
+        gallery.innerHTML += getImagePreviewEditTemplate(att.fileName, att.base64, index, taskIndex, att.size, taskIndex);
     })
+    renderAllDeleteButton();
 }
 

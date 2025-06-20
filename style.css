@@ -146,7 +146,6 @@ header {
   pointer-events: none;
   transition: opacity 0.2s ease;
   display: flex;
-  /* Damit Layout nicht kaputt geht */
 }
 
 .burger-menu.visible {

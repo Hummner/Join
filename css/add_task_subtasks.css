@@ -132,9 +132,16 @@
     border-bottom: 1px solid #29ABE2;
 }
 
+.addTask-subtask-fit {
+    /* max-height: 97px !important; */
+    height: 77px;
+    /* max-height: unset; */
+    min-height: unset;
+}
+
 
 @media (max-width: 900px) {
     .list-subtask-element {
-        padding-left: 4px !important; 
+        padding-left: 4px !important;
     }
 }
