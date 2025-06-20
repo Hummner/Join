@@ -157,6 +157,18 @@
     margin-right: 5px;
 }
 
+.viewer-delete::before {
+    content: '';
+    display: inline-block;
+    width: 17px;
+    height: 17px;
+    background-image: url(/assets/img/icon/delete.svg);
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-right: 5px;
+    filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(7490%) hue-rotate(75deg) brightness(109%) contrast(92%);
+}
+
 .viewer-button:hover {
     background-color: #29ABE2 !important;
 }
@@ -190,6 +202,10 @@ li:hover {
     }
 
     .upload-info-mobile {
+        display: none;
+    }
+
+    .icon-container {
         display: none;
     }
 }

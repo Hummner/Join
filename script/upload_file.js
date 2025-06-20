@@ -61,7 +61,7 @@ function fileObjekt(file, compressedBase64, sizeInKB) {
  */
 function renderPreviewImage() {
     let galleryRef = document.getElementById('gallery_upload');
-    if(!galleryRef) return
+    if (!galleryRef) return
     galleryRef.innerHTML = "";
     allFiles.forEach((file, fileIndex) => {
         galleryRef.innerHTML += getImagePreviewTemplate(file.fileName, file.base64, fileIndex, file.size);
@@ -145,6 +145,14 @@ function renderImageViewer(id, fileIndex, taskIndex) {
                     link.click();
                     document.body.removeChild(link);
                 }
+            },
+            delete: {
+                show: 1,
+                click() {
+                    allFiles.splice(fileIndex, 1);
+                    renderPreviewImage();
+                    viewer.hide();
+                }
             }
         }
     });
@@ -160,7 +168,7 @@ function renderImageViewer(id, fileIndex, taskIndex) {
  * @returns {string} - Filename for download
  */
 function generateDonwloadName(fileIndex, taskIndex) {
-    if(allFiles.length > 0) return allFiles[fileIndex].fileName
+    if (allFiles.length > 0) return allFiles[fileIndex].fileName
     return tasks[taskIndex].attachment[fileIndex].fileName
 }
 
