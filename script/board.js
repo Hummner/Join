@@ -30,7 +30,7 @@ let usersToDeleteFromFirebase = [];
  * Loads the Add Task overlay into the DOM.
  * @async
  */
-async function getAddTaskHTML() {
+async function getAddTaskHTMLtoOverlay() {
   await Promise.all([
     loadHTML("add_task_overlay.html", "add_container"),
   ]);
@@ -68,12 +68,8 @@ async function openAddTask(condition = "") {
   if (condition) {
     currentCondition = condition;
   }
-  await getAddTaskHTML();
-  document.getElementById("cancel_button").classList.remove("d_none");
-  document.getElementById("clear_button").classList.add("d_none");
-  document.getElementById("close_add_task_overlay").classList.remove("d_none");
-  document.getElementById("board_overlay").classList.remove("d_none");
-  document.getElementById("add_container").classList.remove("d_none");
+  await getAddTaskHTMLtoOverlay();
+  loadOverlayToAddTask()
   setTimeout(() => {
     document.getElementById("add_container").classList.remove("overlay-container-sliding");
   }, 1);
@@ -81,6 +77,17 @@ async function openAddTask(condition = "") {
   fitSublistOpen();
   renderUserList();
   datepicker();
+}
+
+
+/** Load Overlay.
+ */
+function loadOverlayToAddTask() {
+  document.getElementById("cancel_button").classList.remove("d_none");
+  document.getElementById("clear_button").classList.add("d_none");
+  document.getElementById("close_add_task_overlay").classList.remove("d_none");
+  document.getElementById("board_overlay").classList.remove("d_none");
+  document.getElementById("add_container").classList.remove("d_none");
 }
 
 
@@ -111,6 +118,7 @@ function fitSublistOpen() {
   }
 }
 
+
 /**
  * Removes the 'addTask-subtask-fit' class from the element with the ID 'sub_list',
  * if the element exists. Typically used to visually close or collapse a subtask list.
@@ -123,38 +131,56 @@ function fitSublistClose() {
 }
 
 
-
 /**
  * Filters tasks based on search input and toggles visibility.
  */
 function searchTask() {
-  const inputValue = document.getElementById("search_task").value.toLowerCase();
-  let matchFound = false;
+  const input = document.getElementById("search_task").value.toLowerCase();
   const feedbackContainer = document.getElementById("no_task_feedback");
   feedbackContainer.innerHTML = "";
 
-  for (let indexTask = 0; indexTask < tasks.length; indexTask++) {
-    const task = document.getElementById("task_index_" + indexTask);
-    if (!task) continue;
+  const matchFound = filterTasksByInput(input);
 
-    const title = tasks[indexTask].title.toLowerCase();
-    const descripton = tasks[indexTask].descripton.toLowerCase();
-
-    if (inputValue === "") {
-      task.classList.remove("d_none");
-      matchFound = true;
-    } else {
-      const isMatch = title.includes(inputValue) || descripton.includes(inputValue);
-      task.classList.toggle("d_none", !isMatch);
-      if (isMatch) matchFound = true;
-    }
+  if (!matchFound && input !== "") {
+    showNoTaskFeedback(input, feedbackContainer);
   }
 
-  if (!matchFound && inputValue !== "") {
-    const msg = createFeedback(`No task found for: "${inputValue}"`, "absolute");
-    feedbackContainer.appendChild(msg);
-  }
   renderEmptyColumn();
+}
+
+
+/**
+ * Filters and toggles task visibility based on search input.
+ * @param {string} input - Lowercased search input.
+ * @returns {boolean} True if any task matched.
+ */
+function filterTasksByInput(input) {
+  let match = false;
+
+  tasks.forEach((task, i) => {
+    const el = document.getElementById("task_index_" + i);
+    if (!el) return;
+
+    const title = task.title.toLowerCase();
+    const description = task.descripton.toLowerCase();
+
+    const isMatch = input === "" || title.includes(input) || description.includes(input);
+    el.classList.toggle("d_none", !isMatch);
+    if (isMatch) match = true;
+  });
+
+  return match;
+}
+
+
+/**
+ * Displays feedback message when no task matches the search.
+ * @param {string} input - The search input.
+ * @param {HTMLElement} container - Element to show the message in.
+ */
+function showNoTaskFeedback(input, container) {
+  const msg = createFeedback(`No task found for: "${input}"`, "absolute");
+  container.appendChild(msg);
 }
 
 
@@ -186,7 +212,6 @@ function checkAndRenderEmptyMessage(columnRef, message) {
     !child.classList.contains("d_none") &&
     !child.classList.contains("empty-column")
   );
-
   const alreadyHasPlaceholder = columnRef.querySelector(".empty-column");
   if (visibleTasks.length === 0 && !alreadyHasPlaceholder) {
     const placeholder = document.createElement("div");
@@ -203,7 +228,6 @@ function checkAndRenderEmptyMessage(columnRef, message) {
 
 /**
  * Renders a counter element that displays how many additional users are not shown.
- * 
  * @param {HTMLElement} userListRef - The parent DOM element where the counter should be appended.
  * @param {number} userCounterFromTask - The total number of users, used to calculate the remaining count.
  */
@@ -248,188 +272,56 @@ function arraySubtasks(index, responseToJson, tasksKeysArray) {
  * @returns {Array<Object>} Array of valid user objects.
  */
 function arrayAssignedTo(index, responseToJson, tasksKeysArray) {
-  let usersArray = [];
-  let taskKey = tasksKeysArray[index];
-  let assignedTo = responseToJson[taskKey].assignedTo;
-  if (assignedTo) {
-    let usersKeysArray = Object.keys(assignedTo);
-    for (let userKey of usersKeysArray) {
-      let username = assignedTo[userKey];
-      let contact = contactsFirebase.find(user =>
-        user.username.toLowerCase() === username.toLowerCase()
-      );
-      if (contact) {
-        usersArray.push(contact);
-      } else {
-        usersToDeleteFromFirebase.push({
-          taskKey: taskKey,
-          userKey: userKey,
-          username: username
-        });
-      }
+  const taskKey = tasksKeysArray[index];
+  const assignedTo = responseToJson[taskKey].assignedTo;
+  if (!assignedTo) return [];
+
+  return extractValidUsers(taskKey, assignedTo);
+}
+
+
+/**
+ * Extracts valid users and collects unknown ones to remove.
+ * @param {string} taskKey - Firebase task key.
+ * @param {Object} assignedTo - Object with assigned usernames.
+ * @returns {Array<Object>} Array of valid user objects.
+ */
+function extractValidUsers(taskKey, assignedTo) {
+  const validUsers = [];
+  const userKeys = Object.keys(assignedTo);
+
+  for (const userKey of userKeys) {
+    const username = assignedTo[userKey];
+    const match = findContactByUsername(username);
+
+    if (match) {
+      validUsers.push(match);
+    } else {
+      addUserToDelete(taskKey, userKey, username);
     }
   }
-  return usersArray;
+  return validUsers;
 }
 
 
 /**
- * Opens the mobile navigation overlay and sets up the appropriate move options.
- * @param {number} taskIndex - Index of the selected task.
- * @param {string} condition - Current condition/status of the task.
+ * Finds a contact by username (case-insensitive).
+ * @param {string} username - Username to match.
+ * @returns {Object|null} Matching user or null.
  */
-function mobileNavigator(taskIndex, condition) {
-  document.getElementById("mobile_nav").classList.remove("d_none");
-  currentDraggableTask = taskIndex;
-
-  if (condition === "ToDo") {
-    renderTextProg();
-  } else if (condition === "inProgress") {
-    renderTextFeedback();
-  } else if (condition === "feedback") {
-    renderTextDone();
-  } else if (condition === "done") {
-    renderTextBackFeedback();
-  }
+function findContactByUsername(username) {
+  return contactsFirebase.find(
+    user => user.username.toLowerCase() === username.toLowerCase()
+  ) || null;
 }
 
 
 /**
- * Sets up UI to move task from ToDo to inProgress.
+ * Stores user data that should be removed from Firebase.
+ * @param {string} taskKey - Task key.
+ * @param {string} userKey - User key inside the task.
+ * @param {string} username - The invalid username.
  */
-function renderTextProg() {
-  document.getElementById("arrow_down_text").innerHTML = "in Progress";
-  document.getElementById("move_to_arrow_down").classList.remove("d_none");
-  document.getElementById("move_to_arrow_down").setAttribute("onclick", "moveTo('inProgress')");
-  openMoveToDialog();
+function addUserToDelete(taskKey, userKey, username) {
+  usersToDeleteFromFirebase.push({ taskKey, userKey, username });
 }
-
-
-/**
- * Sets up UI to move task from inProgress to feedback or back to ToDo.
- */
-function renderTextFeedback() {
-  document.getElementById("arrow_down_text").innerHTML = "Feedback";
-  document.getElementById("arrow_up_text").innerHTML = "To-Do";
-  document.getElementById("move_to_arrow_up").classList.remove("d_none");
-  document.getElementById("move_to_arrow_down").classList.remove("d_none");
-  document.getElementById("move_to_arrow_down").setAttribute("onclick", "moveTo('feedback')");
-  document.getElementById("move_to_arrow_up").setAttribute("onclick", "moveTo('ToDo')");
-  openMoveToDialog();
-}
-
-
-/**
- * Sets up UI to move task from done to feedback.
- */
-function renderTextBackFeedback() {
-  document.getElementById("arrow_up_text").innerHTML = "Feedback";
-  document.getElementById("move_to_arrow_up").classList.remove("d_none");
-  document.getElementById("move_to_arrow_up").setAttribute("onclick", "moveTo('feedback')");
-  openMoveToDialog();
-}
-
-
-/**
- * Sets up UI to move task from feedback to done or back to inProgress.
- */
-function renderTextDone() {
-  document.getElementById("arrow_down_text").innerHTML = "Done";
-  document.getElementById("arrow_up_text").innerHTML = "in Progress";
-  document.getElementById("move_to_arrow_up").classList.remove("d_none");
-  document.getElementById("move_to_arrow_down").classList.remove("d_none");
-  document.getElementById("move_to_arrow_down").setAttribute("onclick", "moveTo('done')");
-  document.getElementById("move_to_arrow_up").setAttribute("onclick", "moveTo('inProgress')");
-  openMoveToDialog();
-}
-
-
-/**
- * Opens the move-to modal overlay for mobile navigation.
- */
-function openMoveToDialog() {
-  document.getElementById("moveTo_overlay").classList.remove("d_none");
-  document.getElementById("mobile_nav").classList.remove("d_none");
-  setTimeout(() => {
-    document.getElementById("mobile_nav").classList.remove("overlay-container-sliding");
-  }, 1);
-  document.getElementById("body").classList.add("overflow-hidden");
-  document.getElementById(`task_index_${currentDraggableTask}`).classList.add('dragging');
-}
-
-
-/**
- * Closes the move-to modal overlay.
- */
-function closeMoveToDialog() {
-  document.getElementById("mobile_nav").classList.add("overlay-container-sliding");
-  setTimeout(() => {
-    document.getElementById("moveTo_overlay").classList.add("d_none");
-    document.getElementById("mobile_nav").classList.add("d_none");
-  }, 100);
-  document.getElementById("body").classList.remove("overflow-hidden");
-  document.getElementById(`task_index_${currentDraggableTask}`).classList.remove('dragging');
-  resetDisplayMovtoDialog();
-}
-
-
-/**
- * Hides all move-to arrows after dialog close.
- */
-function resetDisplayMovtoDialog() {
-  document.getElementById("move_to_arrow_up").classList.add("d_none");
-  document.getElementById("move_to_arrow_down").classList.add("d_none");
-}
-
-
-/**
- * Extracts the attachments of a specific task from a response and returns them as an array.
- *
- * @param {number} index - Index of the task in `tasksKeysArray`
- * @param {Object} responseToJson - The parsed JSON response object containing all tasks
- * @param {Array<string>} tasksKeysArray - Array containing the keys of the tasks
- * @returns {Array<Object>} - Array of attachment objects with file information
- */
-function arrayAttachment(index, responseToJson, tasksKeysArray) {
-  let attachments = [];
-  if (responseToJson[tasksKeysArray[index]].attachment !== undefined) {
-    let attachmentKeys = Object.keys(responseToJson[tasksKeysArray[index]].attachment);
-
-    for (let indexAttachment = 0; indexAttachment < attachmentKeys.length; indexAttachment++) {
-      attachments.push({
-        fileName: responseToJson[tasksKeysArray[index]].attachment[attachmentKeys[indexAttachment]].fileName,
-        fileType: responseToJson[tasksKeysArray[index]].attachment[attachmentKeys[indexAttachment]].fileType,
-        base64: responseToJson[tasksKeysArray[index]].attachment[attachmentKeys[indexAttachment]].base64,
-        size: responseToJson[tasksKeysArray[index]].attachment[attachmentKeys[indexAttachment]].size
-      });
-    }
-  }
-  return attachments;
-}
-
-
-/**
- * Converts the attachments of a specific task in the global `tasks` array into an array of attachment objects
- * and replaces the original structure with the resulting array.
- *
- * @param {number} taskIndex - The index of the task in the `tasks` array
- * @returns {Array<Object>} - The new array of attachment objects
- */
-function arrayAttachmentAfterEdit(taskIndex) {
-  let attachments = [];
-  if (tasks[taskIndex].attachment !== undefined) {
-    let attachmentKeys = Object.keys(tasks[taskIndex].attachment);
-
-    for (let indexAttachment = 0; indexAttachment < attachmentKeys.length; indexAttachment++) {
-      attachments.push({
-        fileName: tasks[taskIndex].attachment[attachmentKeys[indexAttachment]].fileName,
-        fileType: tasks[taskIndex].attachment[attachmentKeys[indexAttachment]].fileType,
-        base64: tasks[taskIndex].attachment[attachmentKeys[indexAttachment]].base64,
-        size: tasks[taskIndex].attachment[attachmentKeys[indexAttachment]].size
-      });
-    }
-  }
-  return tasks[taskIndex].attachment = attachments;
-}
-
-

@@ -240,3 +240,54 @@ function userFeedbackAfterAddTaskPage() {
     window.history.replaceState({}, '', newUrl);
   }
 }
+
+
+/**
+ * Extracts the attachments of a specific task from a response and returns them as an array.
+ *
+ * @param {number} index - Index of the task in `tasksKeysArray`
+ * @param {Object} responseToJson - The parsed JSON response object containing all tasks
+ * @param {Array<string>} tasksKeysArray - Array containing the keys of the tasks
+ * @returns {Array<Object>} - Array of attachment objects with file information
+ */
+function arrayAttachment(index, responseToJson, tasksKeysArray) {
+  let attachments = [];
+  if (responseToJson[tasksKeysArray[index]].attachment !== undefined) {
+    let attachmentKeys = Object.keys(responseToJson[tasksKeysArray[index]].attachment);
+
+    for (let indexAttachment = 0; indexAttachment < attachmentKeys.length; indexAttachment++) {
+      attachments.push({
+        fileName: responseToJson[tasksKeysArray[index]].attachment[attachmentKeys[indexAttachment]].fileName,
+        fileType: responseToJson[tasksKeysArray[index]].attachment[attachmentKeys[indexAttachment]].fileType,
+        base64: responseToJson[tasksKeysArray[index]].attachment[attachmentKeys[indexAttachment]].base64,
+        size: responseToJson[tasksKeysArray[index]].attachment[attachmentKeys[indexAttachment]].size
+      });
+    }
+  }
+  return attachments;
+}
+
+
+/**
+ * Converts the attachments of a specific task in the global `tasks` array into an array of attachment objects
+ * and replaces the original structure with the resulting array.
+ *
+ * @param {number} taskIndex - The index of the task in the `tasks` array
+ * @returns {Array<Object>} - The new array of attachment objects
+ */
+function arrayAttachmentAfterEdit(taskIndex) {
+  let attachments = [];
+  if (tasks[taskIndex].attachment !== undefined) {
+    let attachmentKeys = Object.keys(tasks[taskIndex].attachment);
+
+    for (let indexAttachment = 0; indexAttachment < attachmentKeys.length; indexAttachment++) {
+      attachments.push({
+        fileName: tasks[taskIndex].attachment[attachmentKeys[indexAttachment]].fileName,
+        fileType: tasks[taskIndex].attachment[attachmentKeys[indexAttachment]].fileType,
+        base64: tasks[taskIndex].attachment[attachmentKeys[indexAttachment]].base64,
+        size: tasks[taskIndex].attachment[attachmentKeys[indexAttachment]].size
+      });
+    }
+  }
+  return tasks[taskIndex].attachment = attachments;
+}

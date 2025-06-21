@@ -73,11 +73,9 @@ async function login() {
     let passwd = document.getElementById('password');
     await loadUserData();
     spinningLoaderEnd();
-
     let user = userFirebase.find(
         user => user.email === email.value && user.password === passwd.value
     );
-
     if (user) {
         localStorage.setItem("username", user.username);
         localStorage.setItem("loggedIn", "true");
@@ -283,7 +281,6 @@ function correctedInput(labelID, inputID) {
     let label = document.getElementById(labelID);
     let input = document.getElementById(inputID);
     let validation = inputValidations();
-
     if (label.classList.contains("error-border")) {
         let validationKey = validationType(inputID);
         let pattern = validation[validationKey];

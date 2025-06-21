@@ -14,7 +14,10 @@ function updateDraggableState() {
 }
 
 
-// Initialize draggable state on load and on resize
+/**
+ * Initializes or updates the draggable state of elements
+ * when the DOM is fully loaded or the window is resized.
+ */
 window.addEventListener("DOMContentLoaded", updateDraggableState);
 window.addEventListener("resize", updateDraggableState);
 
@@ -28,11 +31,9 @@ window.addEventListener("resize", updateDraggableState);
 function dragoverHandler(ev) {
     ev.preventDefault();
     const container = document.getElementById('body');
-
     const bounds = container.getBoundingClientRect();
     const topEdge = bounds.top + 150;
     const bottomEdge = bounds.bottom - 150;
-
     if (ev.clientY < topEdge) {
         const speed = Math.max(1, (topEdge - ev.clientY) / 10);
         container.scrollTop -= speed;
@@ -102,7 +103,6 @@ function addHighlight() {
 function removeHighlight() {
     document.getElementById(`task_index_${currentDraggableTask}`).classList.remove('dragging');
     document.querySelector('.board-distribution').classList.remove('lock-layout');
-
     document.getElementById("empty_task_toDo").classList.add("d_none");
     document.getElementById("empty_task_inProg").classList.add("d_none");
     document.getElementById("empty_task_feedback").classList.add("d_none");

@@ -194,24 +194,17 @@ function getDate(taskIndex) {
     const dateFromTask = new Date(defaultDate);
     const today = new Date();
     let hiddenInput = document.getElementById("date_input").value
-
-
     if (flatpickrInstance) {
         flatpickrInstance.setDate(dateFromTask, true);
-
         let expiredDate = document.getElementById("expired_date");
-
         if (expiredDate) {
             expiredDate.classList.add("d_none");
         }
-
         hiddenInput = defaultDate;
     }
-
     if (dateFromTask < today) {
         document.getElementById("expired_date").classList.remove("d_none");
     }
-
     return hiddenInput
 }
 
@@ -282,12 +275,10 @@ function checkAssignedTo(taskIndex) {
     userCounter = 0;
     let checkedUsers = tasks[taskIndex].assignedTo;
     let ids = [];
-
     for (let index = 0; index < checkedUsers.length; index++) {
         let username = tasks[taskIndex].assignedTo[index]
         let user = contactsFirebase.indexOf(username)
         ids.push(user);
-        ;
     }
     for (let index = 0; index < ids.length; index++) {
         const userIndex = ids[index];
@@ -313,7 +304,6 @@ async function deleteTaskOnOverlay(taskIndex) {
             'Content-Type': 'application/json'
         }
     });
-
     deleteTaskFromTaskArray(taskIndex)
     renderTaskInToColumn();
     closeOverlayTask();
@@ -343,7 +333,6 @@ function deleteTaskFromTaskArray(taskIndex) {
 /**
  * Formats the date of a task in the `DD/MM/YYYY` format and sets it as the `datetime` attribute
  * as well as the visible text content of the element with the ID `"overlay_date"`.
- *
  * @param {number} taskIndex - The index of the task in the `tasks` array
  * @returns {string} - The formatted date as text
  */
@@ -361,7 +350,6 @@ function dateForm(taskIndex) {
 /**
  * Renders the existing attachments of a task into the preview gallery (`#ticket_gallery`).
  * Displays a message if no attachments are available.
- *
  * @param {number} taskIndex - The index of the task in the `tasks` array
  */
 function renderAttachments(taskIndex) {

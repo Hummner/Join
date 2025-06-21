@@ -109,23 +109,21 @@ function initGreetingRepeat() {
  */
 async function loadSummaryData() {
     try {
-        const response = await fetch(FIREBASE_URL);
-        const tasks = await response.json();
-        const {
-            todo, done, inProgress, awaitingFeedback,
-            urgent, total, upcomingDate
-        } = computeTaskMetrics(tasks);
-        const metrics = {
-            summaryTodo: todo, summaryDone: done, summaryProgress: inProgress, summaryFeedback: awaitingFeedback, summaryUrgent: urgent, summaryTotal: total
+        const res = await fetch(FIREBASE_URL);
+        const data = await res.json();
+        const { todo, done, inProgress, awaitingFeedback, urgent, total, upcomingDate } = computeTaskMetrics(data);
+        const ids = {
+            summaryTodo: todo,
+            summaryDone: done,
+            summaryProgress: inProgress,
+            summaryFeedback: awaitingFeedback,
+            summaryUrgent: urgent,
+            summaryTotal: total
         };
-        for (let id in metrics) {
-            document.getElementById(id).textContent = metrics[id];
-        }
-        if (upcomingDate) {
-            document.getElementById("summaryDeadline").textContent = formatDate(upcomingDate);
-        }
-    } catch (err) {
-        console.error("Error loading Firebase tasks:", err);
+        Object.entries(ids).forEach(([id, val]) => document.getElementById(id).textContent = val);
+        if (upcomingDate) document.getElementById("summaryDeadline").textContent = formatDate(upcomingDate);
+    } catch (e) {
+        console.error("Error loading summary:", e);
     }
 }
 

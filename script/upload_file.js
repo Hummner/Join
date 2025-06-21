@@ -300,8 +300,6 @@ function resizeAndCompress(img, maxWidth, maxHeight, quality, file) {
 
     const ctx = canvas.getContext('2d');
     ctx.drawImage(img, 0, 0, width, height);
-    console.log(file.type);
-    
     return canvas.toDataURL(file.type, quality);
 }
 
