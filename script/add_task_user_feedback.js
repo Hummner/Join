@@ -113,8 +113,8 @@ function userFeedback() {
     let success = document.getElementById('success');
     success.classList.remove('d-none');
     setTimeout(() => { success.classList.add('show-successful'); }, 1);
-    setTimeout(() => { success.classList.remove('show-successful'); }, 1510);
-    setTimeout(() => { success.classList.add('d-none'); }, 1730);
+    setTimeout(() => { success.classList.remove('show-successful'); }, 3000);
+    setTimeout(() => { success.classList.add('d-none'); }, 3200);
   }, 200);
 }
 

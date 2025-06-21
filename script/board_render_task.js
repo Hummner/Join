@@ -123,7 +123,7 @@ function renderSubtasks(taskIndex) {
  */
 function checkSubtaskLenght(taskIndex, subtaskMax) {
   if (!subtaskMax) {
-    document.getElementById("progress_container_" + taskIndex).innerHTML= "";
+    document.getElementById("progress_container_" + taskIndex).innerHTML = "";
   }
 }
 
@@ -138,7 +138,7 @@ function renderAssignedTo(taskIndex) {
   let userList = tasks[taskIndex].assignedTo;
   userCounterFromTask = userList.length
 
-  if (userCounterFromTask <= 4 && userCounterFromTask !=0 ) {
+  if (userCounterFromTask <= 4 && userCounterFromTask != 0) {
     for (let indexUser = 0; indexUser < userList.length; indexUser++) {
       userListRef.innerHTML += getUserInTaskTemplate(indexUser, userList);
     }
@@ -172,11 +172,11 @@ function renderDragDropHighlights(columns) {
  * @param {number} taskIndex - Index of the task to render.
  */
 function renderSingleTaskInToColumn(taskIndex) {
-    selectConditionForSingleTask(taskIndex);
-    renderAssignedTo(taskIndex);
-    renderSubtasks(taskIndex);
-    renderPrio(taskIndex);
-    renderCategoryColor(taskIndex);
+  selectConditionForSingleTask(taskIndex);
+  renderAssignedTo(taskIndex);
+  renderSubtasks(taskIndex);
+  renderPrio(taskIndex);
+  renderCategoryColor(taskIndex);
 }
 
 
@@ -186,6 +186,28 @@ function renderSingleTaskInToColumn(taskIndex) {
  * @param {number} taskIndex - Index of the task.
  */
 function selectConditionForSingleTask(taskIndex) {
-    const taskRef = document.getElementById(`task_index_${taskIndex}`);
-    taskRef.innerHTML = getSingleTaskAfterEdit(taskIndex);
+  const taskRef = document.getElementById(`task_index_${taskIndex}`);
+  taskRef.innerHTML = getSingleTaskAfterEdit(taskIndex);
+}
+
+
+/**
+ * Displays user feedback after a task has been added, based on a URL parameter.
+ * 
+ * If the URL contains the query parameter `?feedback=taskAdded`,
+ * it triggers feedback functions and then removes the parameter from the URL
+ * to prevent repeated feedback on page reload.
+ * 
+ * Example URL: board.html?feedback=taskAdded
+ */
+function userFeedbackAfterAddTaskPage() {
+  const params = new URLSearchParams(window.location.search);
+  const newUrl = window.location.pathname + (params.toString() ? '?' + params.toString() : '');
+
+  if (params.get("feedback") === "taskAdded") {
+    successfulAddedTask();
+    userFeedback();
+    params.delete("feedback");
+    window.history.replaceState({}, '', newUrl);
+  }
 }

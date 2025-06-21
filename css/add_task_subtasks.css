@@ -133,9 +133,7 @@
 }
 
 .addTask-subtask-fit {
-    /* max-height: 97px !important; */
     height: 77px;
-    /* max-height: unset; */
     min-height: unset;
 }
 

@@ -253,6 +253,7 @@ html {
     align-items: center;
     width: 100%;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
 }
 
 .middle-card-left {
@@ -326,6 +327,7 @@ html {
     padding: 25px;
     gap: 13px;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
 }
 
 .card-down {
@@ -537,7 +539,7 @@ html {
     }
 
     .metric-label {
-        font-size: 12px;
+        font-size: 14px;
     }
 
     .down-metric {

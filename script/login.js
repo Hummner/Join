@@ -1,25 +1,68 @@
 /**
- * Parses the URL for messages and displays them if present.
+ * Parses the "msg" parameter from the current URL.
  */
 const urlParams = new URLSearchParams(window.location.search);
+
+
+/**
+ * Message from URL, used for user feedback.
+ * Example: ?msg=Login+successful
+ */
 const msg = urlParams.get('msg');
+
+
+/**
+ * Element for displaying feedback messages.
+ */
 let info = document.getElementById('poppin');
+
+
+/**
+ * Indicates whether the password is currently visible.
+ */
 let isPasswordVisible = false;
 
 
-// Show logo after short delay
-setTimeout(() => {
-    document.getElementById('logoImg').classList.remove('d-none');
-}, 1060);
+/**
+ * Initializes the login page by showing the logo with a delay
+ * and displaying a feedback message if provided in the URL or global context.
+ */
+function loginInit() {
+    logoAnimation();
+    checkUrlParam();
+}
 
-// Display message from URL if exists
-if (msg) {
-    info.classList.remove('opacity');
-    info.classList.add('poppins-success');
-    info.innerHTML = msg;
-} else {
-    info.classList.add('opacity');
-    info.classList.remove('poppins-success');
+
+/**
+ * Checks for a feedback message (from the global `msg` variable)
+ * and updates the `info` element's appearance accordingly.
+ * 
+ * Assumes:
+ * - `msg` is a globally defined string (or falsy if no message).
+ * - `info` is a global DOM element used for displaying feedback.
+ */
+function checkUrlParam() {
+    if (msg) {
+        info.classList.remove('opacity');
+        info.classList.add('poppins-success');
+        info.innerHTML = msg;
+    } else {
+        info.classList.add('opacity');
+        info.classList.remove('poppins-success');
+    }
+}
+
+
+/**
+ * Animates the login logo by revealing it with a slight delay.
+ * 
+ * Targets an element with the ID `logoImg` and removes the `d-none` class
+ * after 1060 milliseconds to make it visible.
+ */
+function logoAnimation() {
+    setTimeout(() => {
+        document.getElementById('logoImg').classList.remove('d-none');
+    }, 1060);
 }
 
 
@@ -40,8 +83,8 @@ async function login() {
     );
 
     if (user) {
-        localStorage.setItem("username", user.username); 
-        localStorage.setItem("loggedIn", "true");      
+        localStorage.setItem("username", user.username);
+        localStorage.setItem("loggedIn", "true");
         window.location.href = `html/summary.html?name=${encodeURIComponent(user.username)}&login=true`;
         resetUserArray();
     } else {

@@ -21,13 +21,13 @@ let searchedTasks = [];
  * 
  * @function addTask
  */
-function addTask() {
+async function addTask() {
     let newTask;
     let hasError = checkInputFields();
     if (hasError) return;
     newTask = getNewTask();
     tasks.push(newTask);
-    putDataToServer(`/join/tasks/${newTask.id}`, newTask);
+    await putDataToServer(`/join/tasks/${newTask.id}`, newTask);
 
     if (currentPage === "board.html") {
         let taskIndex = getIndex();
@@ -38,7 +38,8 @@ function addTask() {
     }
 
     if (currentPage === "add_task.html") {
-        clearAddTaskAfterAdd()
+        clearAddTaskAfterAdd();
+        window.location.href = "board.html?feedback=taskAdded";
     }
 }
 
@@ -182,9 +183,9 @@ function getPriority() {
  */
 function checkRequiredInputsField() {
     const fields = [
-      { id: 'titel_input', errorId: 'error-title' },
-      { id: 'date_input_picker', errorId: 'error-date' },
-      { id: 'category_select_input', errorId: 'error-cat' }
+        { id: 'titel_input', errorId: 'error-title' },
+        { id: 'date_input_picker', errorId: 'error-date' },
+        { id: 'category_select_input', errorId: 'error-cat' }
     ];
     removeErrorMsg();
     return fields;
