@@ -1,7 +1,6 @@
 /**
  * Stores the current page name extracted from the URL.
  * Used to determine conditional behavior based on page context.
- * 
  * @constant {string}
  */
 const currentPage = window.location.pathname.split("/").pop();
@@ -18,7 +17,6 @@ let searchedTasks = [];
 /**
  * Adds a new task to the task list, validates inputs, and updates the server.
  * If on board.html, it also renders the task into the appropriate column.
- * 
  * @function addTask
  */
 async function addTask() {
@@ -28,7 +26,17 @@ async function addTask() {
     newTask = getNewTask();
     tasks.push(newTask);
     await putDataToServer(`/join/tasks/${newTask.id}`, newTask);
+    checkPage()
+}
 
+
+/**
+ * Performs different actions based on the current page.
+ * - If on "board.html", it retrieves the task index and updates subtasks and assigned users,
+ *   renders the task into the appropriate column, and closes the add task dialog.
+ * - If on "add_task.html", it clears the add task form and redirects to the board with feedback.
+ */
+function checkPage() {
     if (currentPage === "board.html") {
         let taskIndex = getIndex();
         getSubtasksArrayAfterEdit(taskIndex);
@@ -36,7 +44,6 @@ async function addTask() {
         renderTaskInToColumn();
         closeAddTask();
     }
-
     if (currentPage === "add_task.html") {
         clearAddTaskAfterAdd();
         window.location.href = "board.html?feedback=taskAdded";
@@ -46,7 +53,6 @@ async function addTask() {
 
 /**
  * Returns the index of the latest task in the `tasks` array.
- * 
  * @returns {number} Index of last task.
  */
 function getIndex() {
@@ -56,7 +62,6 @@ function getIndex() {
 
 /**
  * Gathers form input data and constructs a new task object.
- * 
  * @returns {Object} New task object.
  */
 function getNewTask() {
@@ -76,13 +81,11 @@ function getNewTask() {
 
 /**
  * Adds an edited task to the list by replacing an existing task and updating the server.
- * 
  * @param {number} taskIndex - Index of the task to be replaced.
  */
 function addEditedTask(taskIndex) {
     let hasError = checkInputFields();
     if (hasError) return;
-
     const newEditedTask = getEditedTask(taskIndex);
     putDataToServer(`/join/tasks/${newEditedTask.id}`, newEditedTask);
     tasks[taskIndex] = newEditedTask;
@@ -97,7 +100,6 @@ function addEditedTask(taskIndex) {
 
 /**
  * Constructs a task object using updated values from form inputs.
- * 
  * @param {number} taskIndex - Index of the task being edited.
  * @returns {Object} Edited task object.
  */
@@ -117,47 +119,79 @@ function getEditedTask(taskIndex) {
 
 
 /**
- * Validates all required input fields and highlights missing inputs.
- * 
+ * Validates all required input fields and highlights missing or invalid entries.
  * @returns {boolean} True if any input is invalid.
  */
 function checkInputFields() {
     let hasError = false;
-    let fields = checkRequiredInputsField();
-    fields.forEach(({ id, errorId }) => {
-        const input = document.getElementById(id);
-        const error = document.getElementById(errorId);
-        const isEmpty = !input.value.trim();
+    const fields = checkRequiredInputsField();
 
-        if (isEmpty) {
-            error.classList.add('visible');
-            if (id === 'category_select_input') {
-                input.parentElement.classList.add('error-label-border');
-            } else {
-                input.classList.add('error-border');
-            }
+    fields.forEach(field => {
+        if (validateField(field)) {
             hasError = true;
-        } else if (id === 'date_input') {
-            const enteredDate = new Date(input.value);
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-            enteredDate.setHours(0, 0, 0, 0);
-
-            if (enteredDate < today) {
-                document.getElementById("error-date").innerHTML = "The selected date cannot be in the past.";
-                error.classList.add('visible');
-                input.classList.add('error-border');
-                hasError = true;
-            }
         }
     });
     return hasError;
 }
 
+/**
+ * Validates a single input field.
+ * @param {{ id: string, errorId: string }} field 
+ * @returns {boolean} True if the field is invalid.
+ */
+function validateField({ id, errorId }) {
+    const input = document.getElementById(id);
+    const error = document.getElementById(errorId);
+    const isEmpty = !input.value.trim();
+
+    if (isEmpty) {
+        showInputError(input, error, id);
+        return true;
+    }
+    if (id === 'date_input') {
+        return validateDateInput(input, error);
+    }
+    return false;
+}
+
+/**
+ * Highlights the input field and shows error message.
+ * @param {HTMLElement} input 
+ * @param {HTMLElement} error 
+ * @param {string} id 
+ */
+function showInputError(input, error, id) {
+    error.classList.add('visible');
+    if (id === 'category_select_input') {
+        input.parentElement.classList.add('error-label-border');
+    } else {
+        input.classList.add('error-border');
+    }
+}
+
+/**
+ * Validates the date input field.
+ * @param {HTMLInputElement} input 
+ * @param {HTMLElement} error 
+ * @returns {boolean} True if date is in the past.
+ */
+function validateDateInput(input, error) {
+    const enteredDate = new Date(input.value);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    enteredDate.setHours(0, 0, 0, 0);
+    if (enteredDate < today) {
+        document.getElementById("error-date").innerHTML = "The selected date cannot be in the past.";
+        error.classList.add('visible');
+        input.classList.add('error-border');
+        return true;
+    }
+    return false;
+}
+
 
 /**
  * Determines which priority option is selected.
- * 
  * @returns {string|undefined} The selected priority level.
  */
 function getPriority() {
@@ -194,7 +228,6 @@ function checkRequiredInputsField() {
 
 /**
  * Generates a unique ID for each task using the current timestamp.
- * 
  * @returns {number} Unique task ID.
  */
 function generateID() {
@@ -204,7 +237,6 @@ function generateID() {
 
 /**
  * Collects selected user IDs and converts them into an assignedTo object.
- * 
  * @returns {Object} Object mapping user keys to usernames.
  */
 function getAssignedTo() {
@@ -216,7 +248,6 @@ function getAssignedTo() {
 
 /**
  * Retrieves an array of selected user IDs from checkboxes.
- * 
  * @returns {Array<string>} Array of usernames.
  */
 function getUserID() {
@@ -233,7 +264,6 @@ function getUserID() {
 
 /**
  * Converts an array of user IDs into key-value pairs.
- * 
  * @param {Array<string>} userID - List of usernames.
  * @returns {Array<Array>} Array of user key-value entries.
  */
@@ -244,7 +274,6 @@ function getUserObject(userID) {
 
 /**
  * Extracts subtask data from the DOM and returns it as an object.
- * 
  * @param {number} [taskIndex] - Optional task index for editing mode.
  * @returns {Object} Subtasks wrapped in a 'subtasks' key.
  */
@@ -280,7 +309,6 @@ function prepareSubtaskIDs() {
 
 /**
  * Converts the assignedTo object into an array of user objects from Firebase.
- * 
  * @param {number} taskIndex - Index of the task.
  * @returns {Array<Object>} Updated assignedTo array.
  */
@@ -312,7 +340,6 @@ function getSubtasksArrayAfterEdit(taskIndex) {
 
 /**
  * Reloads the task overlay by fetching its HTML content.
- * 
  * @async
  * @function clearOverlay
  */
@@ -323,7 +350,6 @@ async function clearOverlay() {
 
 /**
  * Handles checking or unchecking a subtask and updating the progress bar.
- * 
  * @param {number} indexSubtask - Subtask index.
  * @param {number} taskIndex - Task index.
  */
@@ -338,7 +364,6 @@ function addSubtaskChecked(indexSubtask, taskIndex) {
 
 /**
  * Updates the subtask progress, both in the DOM and on the server.
- * 
  * @param {number} taskIndex - Task index.
  * @param {number} indexSubtask - Subtask index.
  * @param {HTMLElement} subtask - Subtask checkbox element.
@@ -376,7 +401,6 @@ function checkedSubtaskChecked(taskIndex, subtaskMax) {
  * Sets locale to English, enforces "day/month/year" format, disables past dates, 
  * and ensures mobile-friendly behavior is turned off. On date selection, the value 
  * is transformed to ISO format and assigned to a hidden input.
- * 
  * @function datepicker
  */
 function datepicker() {

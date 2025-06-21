@@ -146,9 +146,8 @@ function editSubtask(indexSubTask) {
 /**
  * Applies styles for subtask editing mode.
  * @param {number} indexSubTask - Index of the subtask.
- * @param {HTMLInputElement} input - Input element of the subtask.
  */
-function editSubtaskStyle(indexSubTask, input) {
+function editSubtaskStyle(indexSubTask) {
   let inputSubtask = document.getElementById("subtask_" + indexSubTask);
   let inputSubtaskChild = document.getElementById("list_subtask_element_" + indexSubTask);
   let editIcon = document.getElementById("edit_subtask_icon_" + indexSubTask);
@@ -220,18 +219,14 @@ function removeSubtask(indexSubTask, taskIndex) {
 
 
 /**
- * Clears all input fields for adding a task.
+ * Clears all input fields and resets the UI for adding a new task.
  */
 function clearAddTaskField() {
   userCounter = 0;
-  document.getElementById("titel_input").value = "";
-  document.getElementById("description_input").value = "";
-  document.getElementById("date_input").value = "";
-  document.getElementById("date_input_picker").value = "";
+  clearInputsValues();
   document.getElementById("prio_medium").checked = true;
   unsetCheckbox();
   document.getElementById("user_logo_after_seleceted").innerHTML = '<div class="user-counter d_none" id="user_counter"></div>';
-  document.getElementById("category_select_input").value = "";
   document.getElementById("error-long").classList.add("d_none");
   clearSubtaskInput();
   successfulClearTask();
@@ -240,6 +235,22 @@ function clearAddTaskField() {
   clearAttachment();
 }
 
+
+/**
+ * Clears the values of the main input fields used in the task form.
+ */
+function clearInputsValues() {
+  document.getElementById("titel_input").value = "";
+  document.getElementById("description_input").value = "";
+  document.getElementById("date_input").value = "";
+  document.getElementById("date_input_picker").value = "";
+  document.getElementById("category_select_input").value = "";
+}
+
+
+/**
+ * Clears the list of attached files and re-renders the preview area.
+ */
 function clearAttachment() {
   allFiles = [];
   renderPreviewImage();
@@ -251,14 +262,10 @@ function clearAttachment() {
  */
 function clearAddTaskAfterAdd() {
   userCounter = 0;
-  document.getElementById("titel_input").value = "";
-  document.getElementById("description_input").value = "";
-  document.getElementById("date_input").value = "";
-  document.getElementById("date_input_picker").value = "";
+  clearInputsValues();
   document.getElementById("prio_medium").checked = true;
   unsetCheckbox();
   document.getElementById("user_logo_after_seleceted").innerHTML = '<div class="user-counter d_none" id="user_counter"></div>';
-  document.getElementById("category_select_input").value = "";
   document.getElementById("error-long").classList.add("d_none");
   clearSubtaskInput();
   renderUserList();
@@ -313,29 +320,67 @@ function successfulAddedTask() {
 
 
 /**
- * Filters the user list by input and shows or hides matching users.
+ * Filters the user list by input and updates the visibility of matching users.
  */
 function searchContactToTask() {
-  let input = document.getElementById("assigned_select_input").value.toLowerCase().replace(/\s+/g, "");
-  let list = document.getElementById("add_user_list");
+  const input = getSanitizedInput("assigned_select_input");
+  const list = document.getElementById("add_user_list");
   let userFoundCounter = 0;
 
-  for (let index = 0; index < contactsFirebase.length; index++) {
-    let user = document.getElementById("user_" + index + "_label");
+  for (let i = 0; i < contactsFirebase.length; i++) {
+    const user = document.getElementById("user_" + i + "_label");
     if (!user) continue;
-    let name = contactsFirebase[index].username.toLowerCase().replace(/\s+/g, "")
-    if (input === "") {
-      user.classList.remove("d_none");
-    } else {
-      const isMatch = name.includes(input);
-      if (isMatch) {
-        user.classList.remove("d_none");
-        userFoundCounter--;
-      } else {
-        user.classList.add("d_none");
-        userFoundCounter++;
-      }
-    }
+    const match = isUserMatch(i, input);
+    userFoundCounter += updateUserVisibility(user, match, input);
   }
+
   checkUserFound(input, userFoundCounter, list);
+}
+
+
+/**
+ * Gets sanitized (lowercased and trimmed) input from a field.
+ * 
+ * @param {string} id - The input field's ID.
+ * @returns {string} The cleaned input string.
+ */
+function getSanitizedInput(id) {
+  return document.getElementById(id).value.toLowerCase().replace(/\s+/g, "");
+}
+
+
+/**
+ * Checks if the user's name matches the input.
+ * 
+ * @param {number} index - Index of the user in the contacts list.
+ * @param {string} input - The sanitized input to match against.
+ * @returns {boolean} True if the user's name matches.
+ */
+function isUserMatch(index, input) {
+  const name = contactsFirebase[index].username.toLowerCase().replace(/\s+/g, "");
+  return name.includes(input);
+}
+
+
+/**
+ * Shows or hides a user element based on whether there's a match.
+ * 
+ * @param {HTMLElement} user - The user's label element.
+ * @param {boolean} isMatch - Whether the user matches the search input.
+ * @param {string} input - The original search input.
+ * @returns {number} +1 if hidden, -1 if shown, 0 if input is empty.
+ */
+function updateUserVisibility(user, isMatch, input) {
+  if (input === "") {
+    user.classList.remove("d_none");
+    return 0;
+  }
+
+  if (isMatch) {
+    user.classList.remove("d_none");
+    return -1;
+  } else {
+    user.classList.add("d_none");
+    return 1;
+  }
 }

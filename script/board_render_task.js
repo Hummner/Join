@@ -93,31 +93,40 @@ function renderPrio(taskIndex) {
 
 
 /**
- * Renders the subtask progress bar and value for a task.
+ * Renders the subtask progress bar and its values for a task.
  * @param {number} taskIndex - Index of the task.
  */
 function renderSubtasks(taskIndex) {
-  let subtaskProgressBar = document.getElementById("subtasks_user_" + taskIndex);
-  let subtaskMaxRef = document.getElementById("subtask_max_user_" + taskIndex);
-  let subtaskMax = tasks[taskIndex].subtask.length;
-  let subtaskValueRef = document.getElementById("subtask_value_user_" + taskIndex);
-  let subtaskValue = subtaskProgressBar.value;
-  subtaskProgressBar.setAttribute("max", subtaskMax);
-  if (subtaskMax) {
-    subtaskMaxRef.innerHTML = subtaskMax;
+  const subtaskMax = tasks[taskIndex].subtask.length;
+  const progressBar = document.getElementById("subtasks_user_" + taskIndex);
+  const maxRef = document.getElementById("subtask_max_user_" + taskIndex);
+  const valueRef = document.getElementById("subtask_value_user_" + taskIndex);
+
+  progressBar.setAttribute("max", subtaskMax);
+  if (subtaskMax) maxRef.innerHTML = subtaskMax;
+
+  const value = checkedSubtaskChecked(taskIndex, subtaskMax);
+  updateProgressBar(value, progressBar, valueRef);
+  checkSubtaskLenght(taskIndex, subtaskMax);
+}
+
+
+/**
+ * Updates the progress bar and value display.
+ * @param {number} value - Number of checked subtasks.
+ * @param {HTMLElement} bar - The progress bar element.
+ * @param {HTMLElement} valueRef - Element to display current value.
+ */
+function updateProgressBar(value, bar, valueRef) {
+  if (value > 0) {
+    bar.setAttribute("value", value);
+    valueRef.innerHTML = value;
   }
-  subtaskValue = checkedSubtaskChecked(taskIndex, subtaskMax);
-  if (subtaskValue > 0) {
-    subtaskProgressBar.setAttribute("value", subtaskValue);
-    subtaskValueRef.innerHTML = subtaskValue;
-  }
-  checkSubtaskLenght(taskIndex, subtaskMax)
 }
 
 
 /**
  * Checks if a task has a defined maximum number of subtasks and clears the progress container if not.
- *
  * @param {number|string} taskIndex - The index or identifier of the task, used to target the container element.
  * @param {number} subtaskMax - The maximum number of subtasks for the task. If falsy, the progress is cleared.
  */
@@ -134,23 +143,43 @@ function checkSubtaskLenght(taskIndex, subtaskMax) {
  * @returns {string} HTML content inserted into the task user list.
  */
 function renderAssignedTo(taskIndex) {
-  let userListRef = document.getElementById("task_users_" + taskIndex);
-  let userList = tasks[taskIndex].assignedTo;
-  userCounterFromTask = userList.length
-
-  if (userCounterFromTask <= 4 && userCounterFromTask != 0) {
-    for (let indexUser = 0; indexUser < userList.length; indexUser++) {
-      userListRef.innerHTML += getUserInTaskTemplate(indexUser, userList);
-    }
-  } else if (userCounterFromTask > 4) {
-    for (let indexUser = 0; indexUser < 3; indexUser++) {
-      userListRef.innerHTML += getUserInTaskTemplate(indexUser, userList);
-    }
+  const userListRef = document.getElementById("task_users_" + taskIndex);
+  const userList = tasks[taskIndex].assignedTo;
+  userCounterFromTask = userList.length;
+  userListRef.innerHTML = "";
+  if (userCounterFromTask === 0) {
+    return renderNoUser(userListRef);
+  }
+  const maxVisible = userCounterFromTask > 4 ? 3 : userList.length;
+  renderUserAvatars(userListRef, userList, maxVisible);
+  if (userCounterFromTask > 4) {
     renderCounterElement(userListRef, userCounterFromTask);
-  } else {
-    userListRef.innerHTML = "<span style='opacity: 0.2'>No User added</span>";
   }
   return userListRef.innerHTML;
+}
+
+
+/**
+ * Renders user avatars into the task user list container.
+ * @param {HTMLElement} container - The container to render into.
+ * @param {Array} users - Array of assigned users.
+ * @param {number} max - Number of users to render.
+ */
+function renderUserAvatars(container, users, max) {
+  for (let i = 0; i < max; i++) {
+    container.innerHTML += getUserInTaskTemplate(i, users);
+  }
+}
+
+
+/**
+ * Renders a placeholder if no user is assigned.
+ * @param {HTMLElement} container - The container to render into.
+ * @returns {string} The placeholder HTML.
+ */
+function renderNoUser(container) {
+  container.innerHTML = "<span style='opacity: 0.2'>No User added</span>";
+  return container.innerHTML;
 }
 
 

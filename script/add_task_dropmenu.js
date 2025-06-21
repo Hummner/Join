@@ -53,22 +53,72 @@ function renderUserList() {
 function addCheckedUsers(indexUsers) {
   const avatarList = document.getElementById("user_logo_after_seleceted");
   const userCheckbox = document.getElementById("user_" + indexUsers);
-  const userAvatar = document.getElementById("user_checked_" + indexUsers);
-  const userCounterRef = document.getElementById("user_counter");
 
   if (userCheckbox.checked) {
-    userCounter++;
-    document.getElementById("user_" + indexUsers + "_label").classList.remove("user-dropmenu-hover-effekt");
-    if (checkAvatarAmount(avatarList)) return
-    const avatarElement = document.createElement("div");
-    avatarElement.innerHTML = getCheckedAvatar(indexUsers);
-    avatarList.insertBefore(avatarElement.firstChild, userCounterRef);
+    handleUserChecked(indexUsers, avatarList);
   } else {
-    userCounter--;
-    userAvatar?.remove();
-    document.getElementById("user_" + indexUsers + "_label").classList.add("user-dropmenu-hover-effekt");
-    checkAvatarAmount(avatarList)
+    handleUserUnchecked(indexUsers, avatarList);
   }
+}
+
+
+/**
+ * Handles the UI logic when a user is checked (selected).
+ * @param {number} index - Index of the selected user.
+ * @param {HTMLElement} avatarList - The container for selected user avatars.
+ */
+function handleUserChecked(index, avatarList) {
+  userCounter++;
+  toggleLabelHoverEffect(index, false);
+  if (checkAvatarAmount(avatarList)) return;
+  insertUserAvatar(index, avatarList);
+}
+
+
+/**
+ * Handles the UI logic when a user is unchecked (deselected).
+ * @param {number} index - Index of the unselected user.
+ * @param {HTMLElement} avatarList - The container for selected user avatars.
+ */
+function handleUserUnchecked(index, avatarList) {
+  userCounter--;
+  removeUserAvatar(index);
+  toggleLabelHoverEffect(index, true);
+  checkAvatarAmount(avatarList);
+}
+
+
+/**
+ * Toggles the hover effect on the user label.
+ * @param {number} index - Index of the user.
+ * @param {boolean} add - Whether to add or remove the effect.
+ */
+function toggleLabelHoverEffect(index, add) {
+  const label = document.getElementById("user_" + index + "_label");
+  label.classList.toggle("user-dropmenu-hover-effekt", add);
+}
+
+
+/**
+ * Inserts the avatar of the selected user before the user counter.
+ * @param {number} index - Index of the user.
+ * @param {HTMLElement} avatarList - The avatar container element.
+ */
+function insertUserAvatar(index, avatarList) {
+  const userCounterRef = document.getElementById("user_counter");
+  const avatarElement = document.createElement("div");
+  avatarElement.innerHTML = getCheckedAvatar(index);
+  avatarList.insertBefore(avatarElement.firstChild, userCounterRef);
+}
+
+
+/**
+ * Removes the avatar of the unselected user.
+ * @param {number} index - Index of the user.
+ */
+function removeUserAvatar(index) {
+  const userAvatar = document.getElementById("user_checked_" + index);
+  userAvatar?.remove();
 }
 
 
@@ -78,7 +128,6 @@ function addCheckedUsers(indexUsers) {
  * If the total number of users (userCounter) exceeds 4, the function shows
  * a counter element (`user_counter`) indicating how many additional users exist.
  * Otherwise, the counter is hidden.
- * 
  * @returns {boolean} Returns true if more than 4 users are present; otherwise false.
  */
 function checkAvatarAmount() {
