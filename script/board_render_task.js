@@ -203,11 +203,9 @@ function selectConditionForSingleTask(taskIndex) {
 function userFeedbackAfterAddTaskPage() {
   const params = new URLSearchParams(window.location.search);
 
-
   if (params.get("feedback") === "taskAdded") {
     successfulAddedTask();
     userFeedback();
-    debugger
     params.delete("feedback");
     const newUrl = window.location.pathname + (params.toString() ? '?' + params.toString() : '');
     window.history.replaceState({}, '', newUrl);
