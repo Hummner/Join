@@ -1,7 +1,6 @@
 /**
  * Initializes the application layout by loading the header and navbar,
  * and triggers the greeting functionality if the user is on the summary page.
- *
  * @async
  * @function init
  * @param {string} page - The ID of the current page (e.g., 'summary_page').
@@ -11,8 +10,6 @@ async function init(page) {
     await loadHTML("navbar.html", "navbar-section");
     activePageHiglight(page);
     setUserCircleInitials();
-
-
     if (page === 'summary_page') {
         initGreeting();
         initGreetingRepeat();
@@ -23,7 +20,6 @@ async function init(page) {
 /**
  * Checks the login status stored in localStorage.
  * If the user is not logged in, redirects them to the index (login) page.
- *
  * @function isUserLoged
  */
 function isUserLoged() {
@@ -39,7 +35,6 @@ function isUserLoged() {
 /**
  * Logs the user out by resetting the login and layout information in localStorage.
  * Redirects to the index (login) page afterwards.
- *
  * @function logOut
  */
 function logOut() {
@@ -52,7 +47,6 @@ function logOut() {
 
 /**
  * Loads an external HTML file and injects it into a specified container element on the page.
- *
  * @async
  * @function loadHTML
  * @param {string} file - The path to the HTML file.
@@ -99,13 +93,9 @@ function burgerMenuSliding() {
 document.addEventListener("click", function (event) {
     let menu = document.getElementById("burger_menu");
     let userLogo = document.querySelector(".user-logo");
-
-    // Abbrechen, wenn das Menü gar nicht existiert oder nicht sichtbar ist
     if (!menu || !menu.classList.contains("visible")) return;
-
     let clickedInsideMenu = menu.contains(event.target);
     let clickedUserLogo = userLogo && userLogo.contains(event.target);
-
     if (!clickedInsideMenu && !clickedUserLogo) {
         menu.classList.remove("visible");
     }
@@ -115,7 +105,6 @@ document.addEventListener("click", function (event) {
 /**
  * Stores the layout type (internal or external) in localStorage
  * and redirects the user to a given URL.
- *
  * @function setLayoutAndRedirect
  * @param {string} layout - The layout type ('intern' or 'extern').
  * @param {string} url - The destination URL to redirect the user to.
@@ -130,7 +119,6 @@ function setLayoutAndRedirect(layout, url) {
 /**
  * Loads the internal header and navbar for authenticated users.
  * Also highlights the current page for legal/privacy pages.
- *
  * @async
  * @function loadHeaderNavbarIntern
  */
@@ -138,17 +126,14 @@ async function loadHeaderNavbarIntern() {
     await Promise.all([
         loadHTML("/html/header.html", "header-placeholder"),
         loadHTML("/html/navbar.html", "navbar-section")
-
     ]);
     markLegalPrivacyActiveLink();
     setUserCircleInitials();
-
 }
 
 
 /**
  * Loads the external header and navbar for guest (unauthenticated) users.
- *
  * @async
  * @function loadHeaderNavbarExtern
  */
@@ -163,7 +148,6 @@ async function loadHeaderNavbarExtern() {
 /**
  * Adds the 'active-menu' class to the correct navigation item
  * on legal and privacy policy pages.
- *
  * @function markLegalPrivacyActiveLink
  */
 function markLegalPrivacyActiveLink() {
@@ -224,7 +208,6 @@ function enableLogin() {
 
 /**
  * Disables both the standard login and guest login buttons.
- *
  * @function disableLoginButtons
  */
 function disableLoginButtons() {
@@ -237,7 +220,6 @@ function disableLoginButtons() {
 
 /**
  * Enables both the standard login and guest login buttons.
- *
  * @function enableLoginButtons
  */
 function enableLoginButtons() {
@@ -263,7 +245,6 @@ window.addEventListener("DOMContentLoaded", async () => {
     if (isLegalPage) {
         await initLayout();
     }
-
     initCookies();
     initBackButton();
     checkOrientation();
@@ -272,7 +253,6 @@ window.addEventListener("DOMContentLoaded", async () => {
 
 /**
  * Loads the rotate warning overlay into the DOM.
- *
  * @async
  * @function loadRotateWarning
  */
@@ -284,13 +264,11 @@ async function loadRotateWarning() {
 /**
  * Initializes the layout based on login status and current page.
  * Resets layout value every time to ensure clean state.
- *
  * @function initLayout
  */
 async function initLayout() {
     window.location.pathname.includes("privacy_policy.html") ||
-        window.location.pathname.includes("legal_notice.html");
-
+    window.location.pathname.includes("legal_notice.html");
     const isLoggedIn = localStorage.getItem("loggedIn") === "true";
     const hasUsername = !!localStorage.getItem("username");
     const layout = localStorage.getItem("layout");
@@ -321,7 +299,6 @@ function initCookies() {
         if (loginArea) loginArea.classList.remove("d-none");
         enableLoginButtons();
     }
-
     let acceptBtn = document.getElementById("acceptCookiesBtn");
     if (acceptBtn) {
         acceptBtn.addEventListener("click", acceptCookies);
@@ -331,7 +308,6 @@ function initCookies() {
 
 /**
  * Attaches functionality to the back arrow to go to previous page.
- *
  * @function initBackButton
  */
 function initBackButton() {
@@ -345,7 +321,6 @@ function initBackButton() {
 /**
  * Checks the current orientation of the user's device.
  * If on a mobile device in landscape mode, shows a fullscreen warning overlay.
- *
  * @function checkOrientation
  */
 function checkOrientation() {
@@ -367,7 +342,6 @@ window.addEventListener("orientationchange", checkOrientation);
 
 /**
  * Displays the full-screen loading spinner overlay.
- *
  * @function spinningLoaderStart
  */
 function spinningLoaderStart() {
@@ -378,7 +352,6 @@ function spinningLoaderStart() {
 
 /**
  * Hides the full-screen loading spinner overlay.
- *
  * @function spinningLoaderEnd
  */
 function spinningLoaderEnd() {
@@ -391,7 +364,6 @@ function spinningLoaderEnd() {
  * Sets the user's initials inside the circle in the header.
  * If the user is a guest, it shows "G".
  * This function should be called after the header has been injected into the DOM.
- *
  * @function setUserCircleInitials
  */
 function setUserCircleInitials() {
@@ -414,7 +386,6 @@ function setUserCircleInitials() {
 
 /**
  * Returns a set of regular expression patterns used to validate input fields.
- * 
  * @function inputValidations
  * @returns {Object} An object containing validation regex for username, email, password, and phoneNumber.
  */
@@ -431,7 +402,6 @@ function inputValidations() {
 /**
  * Validates the input value based on its ID and updates the label style accordingly.
  * Removes the error class and adds a success class if validation passes.
- * 
  * @function correctedInput
  * @param {string} labelID - The ID of the label element to modify.
  * @param {string} inputID - The ID of the input element to validate.
@@ -454,7 +424,6 @@ function correctedInput(labelID, inputID) {
 
 /**
  * Determines the validation type (e.g., username, email, etc.) based on the input ID.
- * 
  * @function validationType
  * @param {string} inputID - The ID of the input element to analyze.
  * @returns {string} The corresponding validation type key.
@@ -462,7 +431,6 @@ function correctedInput(labelID, inputID) {
 function validationType(inputID) {
     let validationType = "";
     let lowerID = inputID.toLowerCase();
-
     if (lowerID.includes("name")) {
         validationType = "username";
     } else if (lowerID.includes("email")) {
@@ -472,14 +440,12 @@ function validationType(inputID) {
     } else if (lowerID.includes("phone")) {
         validationType = "phoneNumber";
     }
-
     return validationType;
 }
 
 
 /**
  * Removes the success styling from a label, used to reset the state after input was corrected.
- * 
  * @function finishTheCorrection
  * @param {string} labelID - The ID of the label element to reset.
  */
