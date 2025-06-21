@@ -6,7 +6,7 @@ const urlParams = new URLSearchParams(window.location.search);
 
 /**
  * Message from URL, used for user feedback.
- * Example: ?msg=Login+successful
+ * 
  */
 const msg = urlParams.get('msg');
 
@@ -36,10 +36,6 @@ function loginInit() {
 /**
  * Checks for a feedback message (from the global `msg` variable)
  * and updates the `info` element's appearance accordingly.
- * 
- * Assumes:
- * - `msg` is a globally defined string (or falsy if no message).
- * - `info` is a global DOM element used for displaying feedback.
  */
 function checkUrlParam() {
     if (msg) {
